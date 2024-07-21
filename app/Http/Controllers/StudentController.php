@@ -135,16 +135,21 @@ class StudentController extends Controller{
     public function storeCourse($id){
         $rules = [];
         for($i = 1 ; $i < 4 ; $i++){
-            if(isset($rules['course_'.$i])){
-                $rules['class_'.$i] = 'required|exists:classrooms,id';
-            }else{
                 $rules['course_'.$i] = 'nullable|exists:courses,id';
                 $rules['class_'.$i] = 'nullable|exists:classrooms,id';
-    
-            }
+
         }   
 
         $valid = request()->validate($rules);
+
+        for($i = 1 ; $i < 4 ; $i++){
+            if($valid['course_'.$i] != null and $valid['class_'.$i] == null){
+                return back()->withInput()->withError('Something went wrong! Cannot left one empty.');
+            }
+
+        }
+
+        //validate for course and class if one is left empty
 
         $student = Student::findOrFail($id);
 
@@ -162,7 +167,7 @@ class StudentController extends Controller{
                 $student_course->course_id = $course->id;
                 $student_course->save();
             }
-            
+    
         }
 
         return redirect('/student/'.$student->id)->withSuccess('Course Added Successfully');
