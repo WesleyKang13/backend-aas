@@ -23,10 +23,8 @@
 
 
     <!-- Top Bar -->
-    @auth
     @include('partials.topbar')
     <!-- /Topbar -->
-    @endauth
 
     <!-- Alerts -->
     @include('partials.alerts')
