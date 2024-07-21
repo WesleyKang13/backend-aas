@@ -8,16 +8,16 @@
     {!!FB::setErrors($errors) !!}
     @csrf
     <div class="row mt-4">
-        <div class="col-6">
+        <div class="col-8">
             <h1>Edit {{$course->name}}</h1>
         </div>
 
-        <div class="col-6 text-end mt-2">
+        <div class="col-4 text-end mt-2">
             <a href="/course/{{$course->id}}" class="btn btn-secondary">Back</a>
             {!!FB::submit('Update', [], true)!!}
         </div>
 
-        <div class="col-12">
+        <div class="col-12 mt-3">
             {!!FB::input('name', 'Name')!!}</br>
             {!!FB::input('total_student', 'Total Student')!!}</br>
             {!!FB::input('year', 'Year')!!}</br>

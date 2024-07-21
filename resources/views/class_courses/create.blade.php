@@ -19,10 +19,10 @@
         <div class="col-12">
             @for($i = 1 ; $i < 4 ; $i++)
                 {!!FB::select('course_'.$i, 'Course '.$i, $course)!!}</br>
-        
+
             @endfor
         </div>
-        
+
     </div>
 
     {!!FB::close() !!}

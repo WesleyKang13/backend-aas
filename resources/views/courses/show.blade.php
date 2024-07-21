@@ -4,22 +4,22 @@
 @section('content')
 <div class="container shadow">
     <div class="row mt-4">
-        <div class="col-6">
+        <div class="col-8">
             <h1>{{$course->name}}</h1>
         </div>
 
-        <div class="col-6 text-end mt-2">
+        <div class="col-4 text-end mt-2">
             <a href="/course" class="btn btn-secondary">Back</a>
             <a href="/course/{{$course->id}}/edit" class="btn btn-primary">Edit</a>
         </div>
 
-        <div class="col-12">
+        <div class="col-12 mt-3">
             <table class="table-hover table-striped table">
                 <tr>
                     <th>Name</th>
                     <td>{{$course->name}}</td>
                 </tr>
-                
+
                 <tr>
                     <th>Total Student</th>
                     <td>{{$course->total_student}}</td>

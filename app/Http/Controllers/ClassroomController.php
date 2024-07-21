@@ -44,7 +44,7 @@ class ClassroomController extends Controller
                 'total_student' =>  $course->total_student,
                 'created_at' => date('Y-M-d', strtotime($course->created_at)),
                 'updated_at' => date('Y-M-d', strtotime($course->updated_at)),
-                'action' => '<a href="/classcourse/'.$c->id.'/classroom/'.$class->id.'" class="btn btn-primary btn-sm">Manage</a>
+                'action' => '<a href="/classcourse/'.$c->id.'/class/'.$class->id.'" class="btn btn-primary btn-sm">Manage</a>
                             <a href="/classcourse/'.$c->id.'/delete" class="btn btn-danger btn-sm">Delete</a>'
             ];
         }
@@ -93,49 +93,5 @@ class ClassroomController extends Controller
 
         return redirect('/classroom/'.$class->id)->withSuccess('Updated Successfully');
     }
-
-    public function createCourse($id){
-        $class = Classroom::findOrFail($id);
-
-        $courses = Course::query()->where('enabled', true)->orderBy('name', 'asc')->get();
-
-        $course = [null => 'Choose/Select a course'];
-
-        foreach($courses as $c){
-            $course[$c->id] = $c->name. ' - Year('.$c->year.')';
-        }
-
-        return view('classrooms.addcourse')->with([
-            'class' => $class,
-            'course' => $course
-        ]);
-    }
-
-    public function storeCourse($id){
-        $rules = [];
-        for($i = 1 ; $i < 4 ; $i++){
-            $rules['course_'.$i] = 'nullable|exists:courses,id';
-        }   
-
-        $valid = request()->validate($rules);
-
-        $class = Classroom::findOrFail($id);
-        
-        for($i = 1 ; $i < 4 ; $i++){
-            if(isset($valid['course_'.$i])){
-                $course = Course::findOrFail($valid['course_'.$i]);
-                $class_course = new ClassCourse();
-
-                $class_course->class_id = $class->id;
-                $class_course->course_id = $course->id;
-                $class_course->save();
-            }
-            
-        }
-
-        return redirect('/classroom/'.$class->id)->withSuccess('Courses Added Successfully');
-        
-    }
-
 
 }

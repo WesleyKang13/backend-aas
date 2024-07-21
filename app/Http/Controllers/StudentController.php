@@ -71,7 +71,7 @@ class StudentController extends Controller{
                 'name' => '<a href="/course/'.$course->id.'">'.$course->name.'</a>',
                 'created_at' => date('Y-M-d H:i', strtotime($sc->created_at)),
                 'updated_at' => date('Y-M-d H:i', strtotime($sc->updated_at)),
-                'action' => '<a href="/studentcourse/'.$sc->id.'"
+                'action' => '<a href="/studentcourse/'.$sc->id.'/edit"
                                 class="btn btn-primary btn-sm">Manage</a>
                             <a href="/studentcourse/'.$sc->id.'/delete" class="btn btn-danger btn-sm">Delete</a>'
             ];
@@ -108,69 +108,39 @@ class StudentController extends Controller{
 
     }
 
-    public function createCourse($id){
-        $student = Student::findOrFail($id);
+    public function status($id){
+        $status = request()->get('status');
 
-        $classes = Classroom::all();
-        $courses = Course::query()->where('enabled', true)->orderBy('name', 'asc')->get();
+        $valid_status = ['enabled','disabled'];
 
-        $course = [null => 'Choose/select a course'];
-        $class = [null => 'Choose/select a class'];
-
-        foreach($courses as $c){
-            $course[$c->id] = $c->name. ' '.$c->year;
+        if(!in_array($status, $valid_status)){
+            return back()->withError('Invalid Status');
         }
-
-        foreach($classes as $c){
-            $class[$c->id] = $c->code;
-        }
-
-        return view('students.addcourse')->with([
-            'student' => $student,
-            'class' => $class,
-            'course' => $course
-        ]);
-    }
-
-    public function storeCourse($id){
-        $rules = [];
-        for($i = 1 ; $i < 4 ; $i++){
-                $rules['course_'.$i] = 'nullable|exists:courses,id';
-                $rules['class_'.$i] = 'nullable|exists:classrooms,id';
-
-        }   
-
-        $valid = request()->validate($rules);
-
-        for($i = 1 ; $i < 4 ; $i++){
-            if($valid['course_'.$i] != null and $valid['class_'.$i] == null){
-                return back()->withInput()->withError('Something went wrong! Cannot left one empty.');
-            }
-
-        }
-
-        //validate for course and class if one is left empty
 
         $student = Student::findOrFail($id);
 
-        for($i = 1 ; $i < 4 ; $i++){
-            if($valid['course_'.$i] !== null and $valid['class_'.$i] !== null){
-                $course_id = $valid['course_'.$i];
-                $class_id = $valid['class_'.$i];
-
-                $course = Course::findOrFail($course_id);
-                $class = Classroom::findOrFail($class_id);
-            
-                $student_course = new StudentCourse();
-                $student_course->student_id = $student->id;
-                $student_course->class_id = $class->id;
-                $student_course->course_id = $course->id;
-                $student_course->save();
+        if($status == 'enabled'){
+            $status = 1;
+            if($student->enabled == 1){
+                return back()->withError('Student is Enabled');
             }
-    
+
+            $student->enabled = $status;
+
+        }else{
+            $status = 0;
+
+            if($student->enabled == 0){
+                return back()->withError('Student is Disabled');
+            }
+
+            $student->enabled = $status;
         }
 
-        return redirect('/student/'.$student->id)->withSuccess('Course Added Successfully');
-        
+        $student->save();
+
+        return redirect('/student/'.$student->id)->withSuccess('Status Updated');
     }
+
+
 }

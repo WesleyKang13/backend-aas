@@ -12,7 +12,7 @@
         </div>
 
         <div class="col-6 text-end mt-2">
-            <a href="/student" class="btn btn-secondary">Back</a>
+            <a href="/student/{{$student->id}}" class="btn btn-secondary">Back</a>
             {!!FB::submit('Add', [], true)!!}
         </div>
 
@@ -22,7 +22,7 @@
                 {!!FB::select('class_'.$i, 'Class '.$i, $class)!!}</br>
             @endfor
         </div>
-        
+
     </div>
 
     {!!FB::close() !!}

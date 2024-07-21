@@ -1,59 +1,59 @@
 @extends('layouts.app')
-@section('title', 'Student '.$student->id)
+@section('title', 'Lecturer '.$lecturer->id)
 
 @section('content')
 <div class="container shadow">
 
-    {!!FB::open('/student/'.$student->id.'/edit', 'Post')!!}
+    {!!FB::open('/lecturer/'.$lecturer->id.'/edit', 'Post')!!}
     {!!FB::setErrors($errors)!!}
-    {!!FB::setInput($student)!!}
+    {!!FB::setInput($lecturer)!!}
     @csrf
     <div class="row mt-4">
 
         <div class="col-6">
-            <h1>{{$student->lastname.' '.$student->firstname}}</h1>
+            <h1>{{$lecturer->lastname.' '.$lecturer->firstname}}</h1>
         </div>
 
         <div class="col-6 text-end mt-2">
-            @if($student->enabled == 1)
-                <a href="/student/{{$student->id}}/status?status=disabled" class="btn btn-danger">Disable</a>
+            @if($lecturer->enabled == 1)
+                <a href="/lecturer/{{$lecturer->id}}/status?status=disabled" class="btn btn-danger">Disable</a>
             @else
-                <a href="/student/{{$student->id}}/status?status=enabled" class="btn btn-success">Enable</a>
+                <a href="/lecturer/{{$lecturer->id}}/status?status=enabled" class="btn btn-success">Enable</a>
             @endif
 
-            <a href="/student" class="btn btn-secondary">Back</a>
+            <a href="/lecturer" class="btn btn-secondary">Back</a>
             {!!FB::submit('Save', [], true)!!}
         </div>
 
         <table class="table table-hover table-striped">
             <tr>
-                <th>Student Id:</th>
-                <td>{{$student->id}}</td>
+                <th>lecturer Id:</th>
+                <td>{{$lecturer->id}}</td>
             </tr>
 
             <tr>
-                <th>Student Firstname:</th>
+                <th>lecturer Firstname:</th>
                 <td style="width:50%;">{!!FB::input('firstname', '')!!}</td>
             </tr>
 
             <tr>
-                <th>Student Lastname:</th>
+                <th>lecturer Lastname:</th>
                 <td style="width:50%;">{!!FB::input('lastname', '')!!}</td>
             </tr>
 
             <tr>
                 <th>Enabled:</th>
-                <td><span class="badge bg-{{$student->color($student->enabled)}}">{{($student->enabled == 1) ? 'Yes' : 'No'}}</span></td>
+                <td><span class="badge bg-{{$lecturer->color($lecturer->enabled)}}">{{($lecturer->enabled == 1) ? 'Yes' : 'No'}}</span></td>
             </tr>
 
             <tr>
                 <th>Class Created At:</th>
-                <td>{{date('Y-M-d H:i', strtotime($student->created_at))}}</td>
+                <td>{{date('Y-M-d H:i', strtotime($lecturer->created_at))}}</td>
             </tr>
 
             <tr>
                 <th>Class Updated At:</th>
-                <td>{{date('Y-M-d H:i', strtotime($student->updated_at))}}</td>
+                <td>{{date('Y-M-d H:i', strtotime($lecturer->updated_at))}}</td>
             </tr>
         </table>
 
@@ -66,7 +66,7 @@
         </div>
 
         <div class="col-6 text-end mt-2">
-            <a href="/studentcourse/create/{{$student->id}}" class="btn btn-primary"><i class="fa fa-plus"></i> Add Course</a>
+            <a href="/lecturercourse/create/{{$lecturer->id}}" class="btn btn-primary"><i class="fa fa-plus"></i> Add Course</a>
         </div>
 
         <div class="col-12">

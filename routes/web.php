@@ -27,8 +27,12 @@ Route::post('/classroom/edit/{id}', [App\Http\Controllers\ClassroomController::c
 Route::get('/classroom/{id}', [App\Http\Controllers\ClassroomController::class,'show']);
 
 //class course
-Route::get('/classcourse/create/{id}', [App\Http\Controllers\ClassroomController::class,'createCourse']);
-Route::post('/classcourse/create/{id}', [App\Http\Controllers\ClassroomController::class,'storeCourse']);
+Route::get('/classcourse/create/{id}', [App\Http\Controllers\ClassCourseController::class,'create']);
+Route::post('/classcourse/create/{id}', [App\Http\Controllers\ClassCourseController::class,'store']);
+Route::get('/classcourse/{id}/class/{class_id}', [App\Http\Controllers\ClassCourseController::class,'show']);
+Route::post('/classcourse/{id}/edit/{class_id}', [App\Http\Controllers\ClassCourseController::class,'update']);
+Route::get('/classcourse/{id}/delete', [App\Http\Controllers\ClassCourseController::class,'delete']);
+
 
 //courses
 Route::get('/course', [App\Http\Controllers\CourseController::class,'index']);
@@ -44,7 +48,20 @@ Route::get('/student/create', [App\Http\Controllers\StudentController::class,'cr
 Route::post('/student/create', [App\Http\Controllers\StudentController::class,'store']);
 Route::post('/student/{id}/edit', [App\Http\Controllers\StudentController::class,'update']);
 Route::get('/student/{id}', [App\Http\Controllers\StudentController::class,'show']);
+Route::get('/student/{id}/status', [App\Http\Controllers\StudentController::class,'status']);
 
 //student course
-Route::get('/studentcourse/create/{id}', [App\Http\Controllers\StudentController::class,'createCourse']);
-Route::post('/studentcourse/create/{id}', [App\Http\Controllers\StudentController::class,'storeCourse']);
+Route::get('/studentcourse/create/{id}', [App\Http\Controllers\StudentCourseController::class,'create']);
+Route::post('/studentcourse/create/{id}', [App\Http\Controllers\StudentCourseController::class,'store']);
+Route::get('/studentcourse/{id}/edit', [App\Http\Controllers\StudentCourseController::class,'edit']);
+Route::post('/studentcourse/{id}/edit', [App\Http\Controllers\StudentCourseController::class,'update']);
+Route::get('/studentcourse/{student_course_id}/delete', [App\Http\Controllers\StudentCourseController::class,'delete']);
+
+//lecturer
+Route::get('/lecturer', [App\Http\Controllers\LecturerController::class, 'index']);
+Route::get('/lecturer/create', [App\Http\Controllers\LecturerController::class, 'create']);
+Route::post('/lecturer/create', [App\Http\Controllers\LecturerController::class, 'store']);
+Route::get('/lecturer/{id}', [App\Http\Controllers\LecturerController::class, 'show']);
+Route::get('/lecturer/{id}/status', [App\Http\Controllers\LecturerController::class,'status']);
+
+//lecturer course

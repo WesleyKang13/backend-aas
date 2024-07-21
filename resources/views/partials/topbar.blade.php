@@ -13,7 +13,7 @@
                     <a class="nav-link text-dark text-nowrap" href="/classroom">Classroom</a>
                     <a class="nav-link text-dark text-nowrap" href="/course">Course</a>
                     <a class="nav-link text-dark text-nowrap" href="/student">Student</a>
-                    <a class="nav-link text-dark text-nowrap" href="/#">Lecturer</a>
+                    <a class="nav-link text-dark text-nowrap" href="/lecturer">Lecturer</a>
                     <a class="nav-link text-dark text-nowrap" href="/#">Timetable</a>
                 </li>
             </ul>
