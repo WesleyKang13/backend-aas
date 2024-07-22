@@ -18,7 +18,7 @@ class LecturerCourseController extends Controller{
         $class = [null => 'Choose/select a class'];
 
         foreach($courses as $c){
-            $course[$c->id] = $c->name. ' '.$c->year;
+            $course[$c->id] = $c->name. ' - (Year '.$c->year.')';
         }
 
         foreach($classes as $c){
