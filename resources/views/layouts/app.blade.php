@@ -23,7 +23,9 @@
 
 
     <!-- Top Bar -->
-    @include('partials.topbar')
+    @auth
+        @include('partials.topbar')
+    @endauth
     <!-- /Topbar -->
 
     <!-- Alerts -->

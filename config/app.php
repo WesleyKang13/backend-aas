@@ -184,6 +184,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
         'FB' => App\Classes\FormBuilder::class,
+        'userauth' => App\Http\Middleware\UserAuth::class
     ])->toArray(),
 
 ];
