@@ -13,9 +13,14 @@ return new class extends Migration
     {
         Schema::create('timetables', function (Blueprint $table) {
             $table->id();
-            $table->integer('course_id')->index();
             $table->integer('class_id')->index();
-            $table->integer('week_id')->index();
+            $table->integer('course_id')->index();
+            $table->integer('week_number')->index()->default(date('W'));
+            $table->enum('day', ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'])->index();
+            $table->integer('year')->index();
+            $table->date('date')->nullable();
+            $table->string('start_time')->nullable();
+            $table->string('end_time')->nullable();
             $table->boolean('enabled')->default(1);
             $table->timestamps();
         });

@@ -75,5 +75,11 @@ Route::middleware(['userauth'])->group(function(){
     Route::get('/lecturercourse/{id}/edit', [App\Http\Controllers\LecturerCourseController::class,'edit']);
     Route::post('/lecturercourse/{id}/edit', [App\Http\Controllers\LecturerCourseController::class,'update']);
     Route::get('/lecturercourse/{lecturer_course_id}/delete', [App\Http\Controllers\LecturerCourseController::class,'delete']);
+
+    //timetable
+    Route::get('/timetable', [App\Http\Controllers\TimetableController::class,'index']);
+    Route::get('/timetable/create', [App\Http\Controllers\TimetableController::class,'create']);
+    Route::post('/timetable/create', [App\Http\Controllers\TimetableController::class,'store']);
+    Route::get('/timetable/{id}', [App\Http\Controllers\TimetableController::class,'show']);
 });
 
