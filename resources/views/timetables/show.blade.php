@@ -37,12 +37,7 @@
                 <th>Year</th>
                 <td>{{$timetable->year}}</td>
             </tr>
-
-            <tr>
-                <th>Date</th>
-                <td>{{date('Y-M-d', strtotime($timetable->date))}}</td>
-            </tr>
-
+            
             <tr>
                 <th>Start Time</th>
                 <td>{{$timetable->start_time}}</td>

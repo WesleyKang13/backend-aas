@@ -18,7 +18,6 @@ return new class extends Migration
             $table->integer('week_number')->index()->default(date('W'));
             $table->enum('day', ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'])->index();
             $table->integer('year')->index();
-            $table->date('date')->nullable();
             $table->string('start_time')->nullable();
             $table->string('end_time')->nullable();
             $table->boolean('enabled')->default(1);

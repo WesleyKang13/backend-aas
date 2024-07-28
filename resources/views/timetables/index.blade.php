@@ -40,7 +40,7 @@
                 // dom: "<'row'<'col-sm-12 col-md-6'><'col-sm-12 col-md-6'>>" +
                 //     "<'row'<'col-sm-12'tr>>" +
                 //     "<'row'<'col-sm-12 col-md-5'l><'col-sm-12 col-md-7'p>>",
-                //order: [[0, 'asc']],
+                order: [[1, 'asc']],
                 processing: true,
                 serverSide: true,
                 ajax: '{{Request::fullUrl()}}',

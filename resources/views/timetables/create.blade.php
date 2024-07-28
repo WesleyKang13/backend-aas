@@ -22,7 +22,6 @@
             {!!FB::input('week_number', 'Week Number')!!}</br>
             {!!FB::select('day', 'Day', $days)!!}</br>
             {!!FB::input('year', 'Year')!!}</br>
-            {!!FB::date('date', 'Date')!!}</br>
         </div>
 
         <div class="col-3">

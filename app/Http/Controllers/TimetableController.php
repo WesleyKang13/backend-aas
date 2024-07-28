@@ -79,7 +79,6 @@ class TimetableController extends Controller{
             'week_number' => 'required|numeric|min:1|max:52',
             'day' => 'required|string',
             'year' => 'required|numeric',
-            'date' => 'required|date',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i',
         ], [
