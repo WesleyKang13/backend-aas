@@ -36,7 +36,7 @@ class TimetableController extends Controller{
                 ->make('true');
         }
 
-        return view('timetables.index');
+        return view('timetable.index');
     }
 
     public function create(){
@@ -65,7 +65,7 @@ class TimetableController extends Controller{
             $course[$c->id] = $c->name. ' - (Year '.$c->year.')';
         }
 
-        return view('timetables.create')->with([
+        return view('timetable.create')->with([
             'days' => $days,
             'courses' => $course,
             'classes' => $class
@@ -100,6 +100,6 @@ class TimetableController extends Controller{
     public function show($id){
         $timetable = Timetable::findOrFail($id);
 
-        return view('timetables.show')->with('timetable', $timetable);
+        return view('timetable.show')->with('timetable', $timetable);
     }
 }

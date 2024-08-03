@@ -9,7 +9,7 @@
         </div>
 
         <div class="col-6 text-end mt-2">
-            <a href="/timetable/create" class="btn btn-primary"><i class="fa fa-plus"></i> Add Timetable</a>
+            <a href="/timetable/create" class="btn btn-primary"><i class="fa fa-plus"></i> Create Timetable</a>
         </div>
 
         <div class="col-12">

@@ -31,11 +31,11 @@ class LecturerController extends Controller{
                 ->make('true');
         }
 
-        return view('lecturers.index');
+        return view('lecturer.index');
     }
 
     public function create(){
-        return view('lecturers.create');
+        return view('lecturer.create');
     }
 
     public function store(){
@@ -85,7 +85,7 @@ class LecturerController extends Controller{
                 ->make('true');
         }
 
-        return view('lecturers.show')->with([
+        return view('lecturer.show')->with([
             'lecturer' => $lecturer
         ]);
     }

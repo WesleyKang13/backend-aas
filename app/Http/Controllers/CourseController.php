@@ -31,17 +31,17 @@ class CourseController extends Controller
                 ->make('true');
         }
 
-        return view('courses.index');
+        return view('course.index');
     }
 
     public function show($id){
         $course = Course::findOrFail($id);
 
-        return view('courses.show')->with('course', $course);
+        return view('course.show')->with('course', $course);
     }
 
     public function create(){
-        return view('courses.create');
+        return view('course.create');
     }
 
     public function store(){
@@ -70,7 +70,7 @@ class CourseController extends Controller
             0 => 'No'
         ];
 
-        return view('courses.edit')->with([
+        return view('course.edit')->with([
             'course' => $course,
             'enabled' => $enabled
         ]);
@@ -83,7 +83,7 @@ class CourseController extends Controller
             'year' => 'required|string',
             'enabled' => 'required'
         ]);
-        
+
         $course = Course::findOrFail($id);
 
         foreach($valid as $k => $v){

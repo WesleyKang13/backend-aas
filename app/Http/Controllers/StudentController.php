@@ -31,11 +31,11 @@ class StudentController extends Controller{
 
         }
 
-        return view('students.index');
+        return view('student.index');
     }
 
     public function create(){
-        return view('students.create');
+        return view('student.create');
     }
 
     public function store(){
@@ -85,7 +85,7 @@ class StudentController extends Controller{
                 ->make('true');
         }
 
-        return view('students.show')->with([
+        return view('student.show')->with([
             'student' => $student
         ]);
     }

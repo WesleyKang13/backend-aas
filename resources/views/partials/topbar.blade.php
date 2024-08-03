@@ -15,7 +15,6 @@
                     <a class="nav-link text-dark text-nowrap" href="/student">Student</a>
                     <a class="nav-link text-dark text-nowrap" href="/lecturer">Lecturer</a>
                     <a class="nav-link text-dark text-nowrap" href="/timetable">Timetable</a>
-                    <a class="nav-link text-dark text-nowrap" href="/week">Week</a>
                 </li>
             </ul>
 

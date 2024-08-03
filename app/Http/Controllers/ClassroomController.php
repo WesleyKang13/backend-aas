@@ -27,7 +27,7 @@ class ClassroomController extends Controller
 
         }
 
-        return view('classrooms.index');
+        return view('classroom.index');
     }
 
     public function show($id){
@@ -57,14 +57,14 @@ class ClassroomController extends Controller
                 ->make('true');
         }
 
-        return view('classrooms.show')->with([
+        return view('classroom.show')->with([
             'class' => $class,
             'courses' => $class_courses
         ]);
     }
 
     public function create(){
-        return view('classrooms.create');
+        return view('classroom.create');
     }
 
     public function store(){

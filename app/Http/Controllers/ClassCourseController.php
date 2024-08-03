@@ -18,7 +18,7 @@ class ClassCourseController extends Controller {
             $course[$c->id] = $c->name. ' - Year('.$c->year.')';
         }
 
-        return view('class_courses.create')->with([
+        return view('class_course.create')->with([
             'class' => $class,
             'course' => $course
         ]);
@@ -62,7 +62,7 @@ class ClassCourseController extends Controller {
             $course[$c->id] = $c->name. ' ( Year '.$c->year.')';
         }
 
-        return view('class_courses.show')->with([
+        return view('class_course.show')->with([
             'course' => $course,
             'class_course' => $class_course,
             'class' => $class

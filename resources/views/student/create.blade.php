@@ -12,7 +12,7 @@
         </div>
 
         <div class="col-6 text-end mt-2">
-            <a href="/student" class="btn btn-secondary">Back</a>
+            <a href="/student" class="btn btn-secondary">Back   </a>
             {!!FB::submit('Create', [], true)!!}
         </div>
 
@@ -20,7 +20,7 @@
             {!!FB::input('firstname', 'Firstname')!!}</br>
             {!!FB::input('lastname', 'Lastname')!!}</br>
         </div>
-        
+
 
     </div>
 
