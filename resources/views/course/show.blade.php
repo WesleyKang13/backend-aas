@@ -21,6 +21,11 @@
                 </tr>
 
                 <tr>
+                    <th>Code</th>
+                    <td>{{$course->code}}</td>
+                </tr>
+
+                <tr>
                     <th>Total Student</th>
                     <td>{{$course->total_student}}</td>
                 </tr>

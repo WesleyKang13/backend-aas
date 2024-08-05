@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->index();
             $table->integer('total_student');
+            $table->string('code');
             $table->integer('year');
             $table->boolean('enabled')->default(1);
             $table->timestamps();

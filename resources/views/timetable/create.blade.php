@@ -16,6 +16,10 @@
             {!!FB::submit('Create', [], true);!!}
         </div>
 
+        @if(isset($student))
+            {!!FB::hidden('student_id', 'Class', $student->id)!!}</br>
+        @endif
+
         <div class="col-12">
             {!!FB::select('class_id', 'Class', $classes)!!}</br>
             {!!FB::select('course_id', 'Course', $courses)!!}</br>

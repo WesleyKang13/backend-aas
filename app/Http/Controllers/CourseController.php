@@ -47,6 +47,7 @@ class CourseController extends Controller
     public function store(){
         $valid = request()->validate([
             'name' => 'required|string',
+            'code' => 'required|string|min:3',
             'total_student' => 'required|numeric',
             'year' => 'required'
         ]);
@@ -79,6 +80,7 @@ class CourseController extends Controller
     public function update($id){
         $valid = request()->validate([
             'name' => 'required|string',
+            'code' => 'required|string|min:3',
             'total_student' => 'required|string',
             'year' => 'required|string',
             'enabled' => 'required'

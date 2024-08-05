@@ -21,12 +21,4 @@ class StudentTimetable extends Model
     public function student(){
         return $this->belongsTo(Student::class);
     }
-
-    public function classroom(){
-        return $this->belongsTo(Classroom::class);
-    }
-
-    public function course(){
-        return $this->belongsTo(Course::class);
-    }
 }

@@ -83,8 +83,9 @@ Route::middleware(['userauth'])->group(function(){
     Route::get('/timetable/{id}', [App\Http\Controllers\TimetableController::class,'show']);
 
     // student timetable
-    Route::get('/student/{student_id}/timetable', [App\Http\Controllers\StudentTimetable::class,'index']);
-    
-
+    Route::get('/student/{student_id}/timetable', [App\Http\Controllers\StudentTimetableController::class,'index']);
+    Route::get('/studenttimetable/{id}/delete', [App\Http\Controllers\StudentTimetableController::class,'delete']);
+    Route::get('/studenttimetable/create/{student_id}', [App\Http\Controllers\StudentTimetableController::class,'create']);
+    Route::post('/studenttimetable/create/{student_id}', [App\Http\Controllers\StudentTimetableController::class,'store']);
 });
 

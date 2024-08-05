@@ -15,7 +15,7 @@ class ClassCourseController extends Controller {
         $course = [null => 'Choose/Select a course'];
 
         foreach($courses as $c){
-            $course[$c->id] = $c->name. ' - Year('.$c->year.')';
+            $course[$c->id] = '('.$c->code.')'.$c->name. ' - Year('.$c->year.')';
         }
 
         return view('class_course.create')->with([
@@ -59,7 +59,7 @@ class ClassCourseController extends Controller {
         $course = [null => 'Choose/Select a course'];
 
         foreach($courses as $c){
-            $course[$c->id] = $c->name. ' ( Year '.$c->year.')';
+            $course[$c->id] = '('.$c->code.')'.$c->name. ' ( Year '.$c->year.')';
         }
 
         return view('class_course.show')->with([

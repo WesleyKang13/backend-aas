@@ -15,7 +15,7 @@
         </div>
 
         <div class="col-6 text-end mt-2">
-            <a href="" class="btn btn-warning">Timetables</a>
+            <a href="/student/{{$student->id}}/timetable" class="btn btn-warning">Timetables</a>
             @if($student->enabled == 1)
                 <a href="/student/{{$student->id}}/status?status=disabled" class="btn btn-danger">Disable</a>
             @else

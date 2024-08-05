@@ -18,10 +18,11 @@
 
         <div class="col-12">
             {!!FB::input('name', 'Name')!!}</br>
+            {!!FB::input('code', 'Code')!!}</br>
             {!!FB::input('total_student', 'Total Student')!!}</br>
             {!!FB::input('year', 'Year')!!}
         </div>
-        
+
 
     </div>
 

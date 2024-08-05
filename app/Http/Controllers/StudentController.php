@@ -68,7 +68,7 @@ class StudentController extends Controller{
             $student_details[$sc->course_id] = [
                 'code' => $class->code,
                 'year' => $course->year,
-                'name' => '<a href="/course/'.$course->id.'">'.$course->name.'</a>',
+                'name' => '<a href="/course/'.$course->id.'">'.'('.$course->code.') '.$course->name.'</a>',
                 'created_at' => date('Y-M-d H:i', strtotime($sc->created_at)),
                 'updated_at' => date('Y-M-d H:i', strtotime($sc->updated_at)),
                 'action' => '<a href="/studentcourse/'.$sc->id.'/edit"

@@ -18,6 +18,7 @@
                     <tr>
                         <th>Id</th>
                         <th>Course Name</th>
+                        <th>Course Code</th>
                         <th>Total Student</th>
                         <th>Year</th>
                         <th>Enabled</th>
@@ -49,6 +50,7 @@
                 columns: [
                     {data: 'id'},
                     {data: 'name',},
+                    {data: 'code',},
                     {data: 'total_student',},
                     {data: 'year'},
                     {data: 'enabled'},
