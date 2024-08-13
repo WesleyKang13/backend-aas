@@ -99,9 +99,10 @@ class LecturerTimetableController extends Controller{
 
     public function delete($id){
         $lecturer_timetable = LecturerTimetable::findOrFail($id);
+        $lecturer = Lecturer::findOrFail($lecturer_timetable->lecturer_id);
 
         $lecturer_timetable->delete();
 
-        return redirect('/lecturer/'.$lecturer_timetable->id.'/timetable')->withSuccess('Timetable Deleted Successfully');
+        return redirect('/lecturer/'.$lecturer->id.'/timetable')->withSuccess('Timetable Deleted Successfully');
     }
 }
