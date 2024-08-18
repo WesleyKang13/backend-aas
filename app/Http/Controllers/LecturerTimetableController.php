@@ -53,7 +53,7 @@ class LecturerTimetableController extends Controller{
                     return $r['day'];
                 })
                 ->addColumn('action', function($r){
-                    return '<a href="" class="btn btn-primary btn-sm">Edit</a>
+                    return '<a href="/lecturertimetable/'.$r['lecturer_timetable']->id.'/edit" class="btn btn-primary btn-sm">Edit</a>
                             <a href="/lecturertimetable/'.$r['lecturer_timetable']->id.'/delete" class="btn btn-danger btn-sm">Delete</a>';
                 })
                 ->rawColumns(['action', 'timetable_id'])
@@ -104,5 +104,36 @@ class LecturerTimetableController extends Controller{
         $lecturer_timetable->delete();
 
         return redirect('/lecturer/'.$lecturer->id.'/timetable')->withSuccess('Timetable Deleted Successfully');
+    }
+
+    public function edit($id){
+        $lecturer_timetable = LecturerTimetable::findOrFail($id);
+
+        $timetables = Timetable::query()->where('enabled', true)->get();
+
+        $timetable = [null => 'Select/Choose a timetable'];
+
+        foreach($timetables as $t){
+            $timetable[$t->id] = '('.$t->course->name. ') - '.$t->classroom->code. ' | Week: '.$t->week_number. '/'.$t->year;
+        }
+
+        return view('timetable.lecturer.edit')->with([
+            'lecturer_timetable' => $lecturer_timetable,
+            'timetable' => $timetable
+        ]);
+    }
+
+    public function update($id){
+        $valid = request()->validate([
+            'timetable_id' => 'required|exists:timetables,id'
+        ]);
+
+        $lecturer_timetable = LecturerTimetable::findOrFail($id);
+
+        $lecturer_timetable->timetable_id = $valid['timetable_id'];
+
+        $lecturer_timetable->save();
+
+        return redirect('/lecturer/'.$lecturer_timetable->lecturer_id.'/timetable')->withSuccess('Timetable Updated Successfully');
     }
 }

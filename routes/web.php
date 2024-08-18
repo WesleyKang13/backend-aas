@@ -87,11 +87,15 @@ Route::middleware(['userauth'])->group(function(){
     Route::get('/studenttimetable/{id}/delete', [App\Http\Controllers\StudentTimetableController::class,'delete']);
     Route::get('/studenttimetable/create/{student_id}', [App\Http\Controllers\StudentTimetableController::class,'create']);
     Route::post('/studenttimetable/create/{student_id}', [App\Http\Controllers\StudentTimetableController::class,'store']);
+    Route::get('/studenttimetable/{id}/edit',[App\Http\Controllers\StudentTimetableController::class,'edit']);
+    Route::post('/studenttimetable/{id}/edit',[App\Http\Controllers\StudentTimetableController::class,'update']);
 
     //lecturer timetable
     Route::get('/lecturer/{lecturer_id}/timetable',  [App\Http\Controllers\LecturerTimetableController::class, 'index']);
     Route::get('/lecturertimetable/{id}/delete', [App\Http\Controllers\LecturerTimetableController::class, 'delete']);
     Route::get('/lecturertimetable/create/{id}', [App\Http\Controllers\LecturerTimetableController::class, 'create']);
     Route::post('/lecturertimetable/create/{id}', [App\Http\Controllers\LecturerTimetableController::class, 'store']);
+    Route::get('/lecturertimetable/{id}/edit', [App\Http\Controllers\LecturerTimetableController::class, 'edit']);
+    Route::post('/lecturertimetable/{id}/edit', [App\Http\Controllers\LecturerTimetableController::class, 'update']);
 });
 

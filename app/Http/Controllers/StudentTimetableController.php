@@ -54,7 +54,7 @@ class StudentTimetableController extends Controller
                     return $r['day'];
                 })
                 ->addColumn('action', function($r){
-                    return '<a href="" class="btn btn-primary btn-sm">Edit</a>
+                    return '<a href="/studenttimetable/'.$r['student_timetable']->id.'/edit" class="btn btn-primary btn-sm">Edit</a>
                             <a href="/studenttimetable/'.$r['student_timetable']->id.'/delete" class="btn btn-danger btn-sm">Delete</a>';
                 })
                 ->rawColumns(['action', 'timetable_id'])
@@ -105,5 +105,36 @@ class StudentTimetableController extends Controller
         $student_timetable->save();
 
         return redirect('/student/'.$student->id.'/timetable')->withSuccess('Timetable Created Successfully');
+    }
+
+    public function edit($id){
+        $student_timetable = StudentTimetable::findOrFail($id);
+
+        $timetables = Timetable::query()->where('enabled', true)->get();
+
+        $timetable = [null => 'Select/Choose a timetable'];
+
+        foreach($timetables as $t){
+            $timetable[$t->id] = '('.$t->course->name. ') - '.$t->classroom->code. ' | Week: '.$t->week_number. '/'.$t->year;
+        }
+
+        return view('timetable.student.edit')->with([
+            'timetable' => $timetable,
+            'student_timetable' => $student_timetable
+        ]);
+    }
+
+    public function update($id){
+        $valid = request()->validate([
+            'timetable_id' => 'required|exists:timetables,id'
+        ]);
+
+        $student_timetable = StudentTimetable::findOrFail($id);
+
+        $student_timetable->timetable_id = $valid['timetable_id'];
+
+        $student_timetable->save();
+
+        return redirect('/student/'.$student_timetable->student_id.'/timetable')->withSuccess('Timetable Updated Successfully');
     }
 }
