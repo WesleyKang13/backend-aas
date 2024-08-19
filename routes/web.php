@@ -17,12 +17,12 @@ Route::get('/', function () {
     return redirect('/dashboard');
 });
 
-Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'index']);
-Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'authenticate']);
+Route::get('/login', [App\Http\Controllers\Login\LoginController::class, 'index']);
+Route::post('/login', [App\Http\Controllers\Login\LoginController::class, 'authenticate']);
 
 Route::middleware(['userauth'])->group(function(){
-    Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index']);
-    Route::get('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout']);
+    Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'dashboard']);
+    Route::get('/logout', [App\Http\Controllers\Login\LoginController::class, 'logout']);
 
     //classrooms
     Route::get('/classroom', [App\Http\Controllers\ClassroomController::class,'index']);
