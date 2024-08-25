@@ -47,14 +47,6 @@ Route::middleware(['userauth'])->group(function(){
     Route::post('/course/{id}/edit', [App\Http\Controllers\CourseController::class,'update']);
     Route::get('/course/{id}', [App\Http\Controllers\CourseController::class,'show']);
 
-    //students
-    Route::get('/student', [App\Http\Controllers\StudentController::class,'index']);
-    Route::get('/student/create', [App\Http\Controllers\StudentController::class,'create']);
-    Route::post('/student/create', [App\Http\Controllers\StudentController::class,'store']);
-    Route::post('/student/{id}/edit', [App\Http\Controllers\StudentController::class,'update']);
-    Route::get('/student/{id}', [App\Http\Controllers\StudentController::class,'show']);
-    Route::get('/student/{id}/status', [App\Http\Controllers\StudentController::class,'status']);
-
     //student course
     Route::get('/studentcourse/create/{id}', [App\Http\Controllers\StudentCourseController::class,'create']);
     Route::post('/studentcourse/create/{id}', [App\Http\Controllers\StudentCourseController::class,'store']);
@@ -62,12 +54,14 @@ Route::middleware(['userauth'])->group(function(){
     Route::post('/studentcourse/{id}/edit', [App\Http\Controllers\StudentCourseController::class,'update']);
     Route::get('/studentcourse/{student_course_id}/delete', [App\Http\Controllers\StudentCourseController::class,'delete']);
 
-    //lecturer
-    Route::get('/lecturer', [App\Http\Controllers\LecturerController::class, 'index']);
-    Route::get('/lecturer/create', [App\Http\Controllers\LecturerController::class, 'create']);
-    Route::post('/lecturer/create', [App\Http\Controllers\LecturerController::class, 'store']);
-    Route::get('/lecturer/{id}', [App\Http\Controllers\LecturerController::class, 'show']);
-    Route::get('/lecturer/{id}/status', [App\Http\Controllers\LecturerController::class,'status']);
+    // user
+    Route::get('/users', [App\Http\Controllers\UserController::class, 'index']);
+    Route::get('/users/create', [App\Http\Controllers\UserController::class, 'create']);
+    Route::post('/users/create', [App\Http\Controllers\UserController::class, 'store']);
+    Route::get('/users/edit/{id}', [App\Http\Controllers\UserController::class, 'edit']);
+    Route::post('/users/edit/{id}', [App\Http\Controllers\UserController::class, 'update']);
+    Route::get('/users/{id}', [App\Http\Controllers\UserController::class, 'show']);
+    Route::get('/users/{id}/s', [App\Http\Controllers\UserController::class, 'status']);
 
     //lecturer course
     Route::get('/lecturercourse/create/{id}', [App\Http\Controllers\LecturerCourseController::class,'create']);

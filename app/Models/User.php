@@ -42,4 +42,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function color($type){
+        if($type == 1){
+            return 'success';
+        }else{
+            return 'danger';
+        }
+    }
 }
