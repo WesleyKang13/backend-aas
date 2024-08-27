@@ -62,6 +62,9 @@ Route::middleware(['userauth'])->group(function(){
     Route::post('/users/edit/{id}', [App\Http\Controllers\UserController::class, 'update']);
     Route::get('/users/{id}', [App\Http\Controllers\UserController::class, 'show']);
     Route::get('/users/{id}/s', [App\Http\Controllers\UserController::class, 'status']);
+    Route::get('/users/{id}/course/create', [App\Http\Controllers\UserController::class, 'add']);
+    Route::post('/users/{id}/course/create', [App\Http\Controllers\UserController::class, 'assign']);
+    Route::get('/usercourse/{id}/delete',[App\Http\Controllers\UserController::class, 'delete']);
 
     //lecturer course
     Route::get('/lecturercourse/create/{id}', [App\Http\Controllers\LecturerCourseController::class,'create']);

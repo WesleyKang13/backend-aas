@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\UserCourse;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -49,5 +50,9 @@ class User extends Authenticatable
         }else{
             return 'danger';
         }
+    }
+
+    public function user_course(){
+        return $this->hasMany(UserCourse::class);
     }
 }
