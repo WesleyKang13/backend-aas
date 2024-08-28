@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\UserCourse;
+use App\Models\UserTimetable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -54,5 +55,9 @@ class User extends Authenticatable
 
     public function user_course(){
         return $this->hasMany(UserCourse::class);
+    }
+
+    public function user_timetable(){
+        return $this->hasMany(UserTimetable::class);
     }
 }

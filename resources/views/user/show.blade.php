@@ -10,6 +10,7 @@
         </div>
 
         <div class="col-6 text-end">
+            <a href="/users/{{$user->id}}/timetable" class="btn btn-primary">Timetable</a>
             @if($user->enabled == 1)
                 <a href="/users/{{$user->id}}/s?status=disabled" class="btn btn-danger">Disable</a>
             @else

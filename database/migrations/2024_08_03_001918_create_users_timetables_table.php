@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('lecturer_timetables', function (Blueprint $table) {
+        Schema::create('users_timetables', function (Blueprint $table) {
             $table->id();
             $table->integer('timetable_id')->index();
-            $table->integer('lecturer_id')->index();
+            $table->integer('user_id')->index();
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('student_timetables');
+        Schema::dropIfExists('users_timetables');
     }
 };

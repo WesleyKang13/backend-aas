@@ -1,19 +1,19 @@
 @extends('layouts.app')
-@section('title', $student->lastname. ' '.$student->firstname.' timetable')
+@section('title', $user->lastname. ' '.$user->firstname.' timetable')
 
 @section('content')
 <div class="container-fluid">
     <div class="row mt-4">
         <div class="col-6">
-            <h1>Manage {{$student->lastname. ' ' .$student->firstname}}'s Timetable</h1>
+            <h1>Manage {{$user->lastname. ' ' .$user->firstname}}'s Timetable</h1>
         </div>
 
         <div class="col-6 text-end">
-            <a href="/student/{{$student->id}}" class="btn btn-secondary">Back</a>
-            <a href="/studenttimetable/create/{{$student->id}}" class="btn btn-primary">Add Timetable</a>
+            <a href="/student/{{$user->id}}" class="btn btn-secondary">Back</a>
+            <a href="/users/{{$user->id}}/timetable/create" class="btn btn-primary">Add Timetable</a>
         </div>
 
-        <table class="table table-hover table-striped" id="studentimetableDT">
+        <table class="table table-hover table-striped" id="usertimetableDT">
             <thead>
                 <tr>
                     <th>Timetable Id</th>
@@ -33,11 +33,11 @@
 @push('scripts')
 <script>
     $(document).ready(function(){
-        $('#studentimetableDT').DataTable({
+        $('#usertimetableDT').DataTable({
                 // dom: "<'row'<'col-sm-12 col-md-6'><'col-sm-12 col-md-6'>>" +
                 //     "<'row'<'col-sm-12'tr>>" +
                 //     "<'row'<'col-sm-12 col-md-5'l><'col-sm-12 col-md-7'p>>",
-                order: [[1, 'asc']],
+                // order: [[1, 'asc']],
                 processing: true,
                 serverSide: true,
                 ajax: '{{Request::fullUrl()}}',
@@ -47,9 +47,9 @@
                 ],
                 columns: [
                     {data: 'timetable_id',},
-                    {data: 'class',},
-                    {data: 'course',},
-                    {data: 'year'},
+                    {data: 'class_code',},
+                    {data: 'course_name',},
+                    {data: 'course_year'},
                     {data: 'week_number',},
                     {data: 'day',},
                     {data: 'action', orderable: false, searchable: false,},

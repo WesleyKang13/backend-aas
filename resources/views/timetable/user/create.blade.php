@@ -3,16 +3,16 @@
 
 @section('content')
 <div class="container shadow">
-    {!!FB::open('/studenttimetable/create/'.$student->id, 'post')!!}
+    {!!FB::open('/users/'.$user->id.'/timetable/create', 'post')!!}
     {!!FB::setErrors($errors)!!}
     @csrf
     <div class="row mt-4">
         <div class="col-6">
-            <h1>Add Timetable To {{$student->lastname .' '.$student->firstname}}</h1>
+            <h1>Add Timetable To {{$user->lastname .' '.$user->firstname}}</h1>
         </div>
 
         <div class="col-6 text-end mt-2">
-            <a href="/studenttimetable/{{$student->id}}/timetable" class="btn btn-secondary">Back</a>
+            <a href="/users/{{$user->id}}/timetable" class="btn btn-secondary">Back</a>
             {!!FB::submit('Create', [], true);!!}
         </div>
 
