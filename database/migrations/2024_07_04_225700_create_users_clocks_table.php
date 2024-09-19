@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('lecturer_clocks', function (Blueprint $table) {
+        Schema::create('users_clocks', function (Blueprint $table) {
             $table->id();
-            $table->integer('lecturer_id')->index();
-            $table->integer('class_id')->index();
-            $table->enum('type', ['in','break','out']);
+            $table->integer('user_id')->index();
+            $table->integer('timetable_id')->index();
+            $table->boolean('status')->default(0);
             $table->string('ip_address');
             $table->timestamp('timestamp')->nullable();
             $table->boolean('enabled')->default(1);
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('lecturer_clocks');
-    }
+        Schema::dropIfExists('users_clocks');
+    }               
 };

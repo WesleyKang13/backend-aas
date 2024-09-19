@@ -14,6 +14,7 @@
                     <a class="nav-link text-dark text-nowrap" href="/course">Course</a>
                     <a class="nav-link text-dark text-nowrap" href="/users">User</a>
                     <a class="nav-link text-dark text-nowrap" href="/timetable">Timetable</a>
+                    <a class="nav-link text-dark text-nowrap" href="/clocks">Clocks</a>
                 </li>
             </ul>
 

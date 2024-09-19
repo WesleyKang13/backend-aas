@@ -20,7 +20,7 @@ class UserTimetableController extends Controller
 
         foreach($user_timetables as $ut){
             $timetable = Timetable::findOrFail($ut->timetable_id);
-            $class = Classroom::findOrFail($timetable->id);
+            $class = Classroom::findOrFail($timetable->class_id);
             $course = Course::findOrFail($timetable->course_id);
 
             $user_timetable[] = [
@@ -32,7 +32,7 @@ class UserTimetableController extends Controller
                 'day' => $timetable->day,
                 'action' => '<a href="/users/'.$ut->id.'/timetable/delete" class="btn btn-danger btn-sm">Delete</a>'
             ];
-        } 
+        }
 
         if(request()->ajax()){
             return DataTables::of($user_timetable)
@@ -81,7 +81,7 @@ class UserTimetableController extends Controller
         $timetable = [null => 'Select/Choose a timetable'];
 
         foreach($timetables as $t){
-            $timetable[$t->id] = '('.$t->course->name. ') - '.$t->classroom->code. ' | Week: '.$t->week_number. '/'.$t->year;
+            $timetable[$t->id] = '('.$t->course->name. ') - '.$t->classroom->code. ' | Week: '.$t->week_number. '/'.$t->year. ' - '.$t->day;
         }
 
         return view('timetable.user.create')->with([

@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('student_clocks', function (Blueprint $table) {
+        Schema::create('attendance', function (Blueprint $table) {
             $table->id();
-            $table->integer('student_id')->index();
-            $table->integer('class_id')->index();
-            $table->enum('type', ['in','out']);
+            $table->date('date');
+            $table->integer('course_id')->index();
+            $table->integer('user_id')->index();
+            $table->string('status');
+            $table->date('timestamp');
+            $table->string('gps');
             $table->string('ip_address');
-            $table->timestamp('timestamp')->nullable();
-            $table->boolean('enabled')->default(1);
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('student_clocks');
+        Schema::dropIfExists('attendance');
     }
 };
