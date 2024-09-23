@@ -18,7 +18,8 @@ return new class extends Migration
             $table->integer('user_id')->index();
             $table->string('status');
             $table->date('timestamp');
-            $table->string('gps');
+            $table->string('lat');
+            $table->string('long');
             $table->string('ip_address');
             $table->timestamps();
         });
