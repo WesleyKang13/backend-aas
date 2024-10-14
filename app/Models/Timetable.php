@@ -18,4 +18,5 @@ class Timetable extends Model
     public function classroom(){
         return $this->belongsTo(Classroom::class, 'class_id', 'id');
     }
+
 }

@@ -23,33 +23,9 @@
         <div class="col-12">
             {!!FB::select('class_id', 'Class', $classes)!!}</br>
             {!!FB::select('course_id', 'Course', $courses)!!}</br>
-            {!!FB::input('week_number', 'Week Number')!!}</br>
-            {!!FB::select('day', 'Day', $days)!!}</br>
-            {!!FB::input('year', 'Year')!!}</br>
-        </div>
-
-        <div class="col-3">
-            <label for="start_time">Start Time</label>
-        </div>
-
-        <div class="col-3 text-end">
-            <input type="time" name="start_time" style="width:100%; border-radius:5px; padding:5px;"></br>
-
-            @if ($errors->has('start_time'))
-                <span class="text-danger">{{ $errors->first('start_time') }}</span>
-            @endif
-        </div>
-
-        <div class="col-3">
-            <label for="end_time">End Time</label>
-        </div>
-
-        <div class="col-3 text-end pb-3">
-            <input type="time" name="end_time" style="width:100%; border-radius:5px; padding:5px;"></br>
-
-            @if ($errors->has('end_time'))
-                <span class="text-danger text-start">{{ $errors->first('end_time') }}</span>
-            @endif
+            {!!FB::input('name', 'Name')!!}</br>
+            {!!FB::date('from', 'From')!!}</br>
+            {!!FB::date('to', 'To')!!}</br>
         </div>
 
     </div>

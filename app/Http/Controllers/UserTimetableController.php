@@ -28,8 +28,8 @@ class UserTimetableController extends Controller
                 'class_code' => $class->code,
                 'course_name' => $course->name,
                 'course_year' => $course->year,
-                'week_number' => $timetable->week_number,
-                'day' => $timetable->day,
+                'from' => date('Y-m-d' , strtotime($timetable->from)),
+                'to' => date('Y-m-d', strtotime($timetable->to)),
                 'action' => '<a href="/users/'.$ut->id.'/timetable/delete" class="btn btn-danger btn-sm">Delete</a>'
             ];
         }
@@ -48,11 +48,11 @@ class UserTimetableController extends Controller
                 ->editColumn('course_year', function($r){
                     return $r['course_year'];
                 })
-                ->editColumn('week_number', function($r){
-                    return $r['week_number'];
+                ->editColumn('from', function($r){
+                    return $r['from'];
                 })
-                ->editColumn('day', function($r){
-                    return $r['day'];
+                ->editColumn('to', function($r){
+                    return $r['to'];
                 })
                 ->addColumn('action', function($r){
                     return $r['action'];
@@ -76,12 +76,12 @@ class UserTimetableController extends Controller
 
     public function create($user_id){
         $user = User::findOrFail($user_id);
-        $timetables = Timetable::query()->where('enabled', true)->get();
+        $timetables = Timetable::all();
 
         $timetable = [null => 'Select/Choose a timetable'];
 
         foreach($timetables as $t){
-            $timetable[$t->id] = '('.$t->course->name. ') - '.$t->classroom->code. ' | Week: '.$t->week_number. '/'.$t->year. ' - '.$t->day;
+            $timetable[$t->id] = '('.$t->course->name. ') - '.$t->classroom->code. ' | From: '.$t->from. ' - '.$t->to .' / Note:'.$t->name;
         }
 
         return view('timetable.user.create')->with([

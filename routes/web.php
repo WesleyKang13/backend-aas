@@ -77,6 +77,8 @@ Route::middleware(['userauth'])->group(function(){
     Route::get('/timetable/create', [App\Http\Controllers\TimetableController::class,'create']);
     Route::post('/timetable/create', [App\Http\Controllers\TimetableController::class,'store']);
     Route::get('/timetable/{id}', [App\Http\Controllers\TimetableController::class,'show']);
+    Route::get('/timetable/{id}/addschedule', [App\Http\Controllers\TimetableController::class, 'addschedule']);
+    Route::post('/timetable/{id}/addschedule', [App\Http\Controllers\TimetableController::class, 'storeschedule']);
 
 });
 

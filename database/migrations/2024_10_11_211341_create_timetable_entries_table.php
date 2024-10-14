@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('timetables', function (Blueprint $table) {
+        Schema::create('timetable_entries', function (Blueprint $table) {
             $table->id();
-            $table->integer('class_id')->index();
-            $table->integer('course_id')->index();
-            $table->string('name');
-            $table->date('from');
-            $table->date('to');
+            $table->integer('timetable_id')->index();
+            $table->enum('day', ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']);
+            $table->string('starttime');
+            $table->string('endtime');
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('timetables');
+        Schema::dropIfExists('timetable_entries');
     }
 };

@@ -18,11 +18,8 @@
                     <tr>
                         <th>Class Code</th>
                         <th>Course Name</th>
-                        <th>Week Number</th>
-                        <th>Day</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
-                        <th>Enabled</th>
+                        <th>From</th>
+                        <th>To</th>
                         <th>Created At</th>
                         <th>Action</th>
                     </tr>
@@ -40,7 +37,7 @@
                 // dom: "<'row'<'col-sm-12 col-md-6'><'col-sm-12 col-md-6'>>" +
                 //     "<'row'<'col-sm-12'tr>>" +
                 //     "<'row'<'col-sm-12 col-md-5'l><'col-sm-12 col-md-7'p>>",
-                order: [[1, 'asc']],
+                order: [[4, 'desc']],
                 processing: true,
                 serverSide: true,
                 ajax: '{{Request::fullUrl()}}',
@@ -51,11 +48,8 @@
                 columns: [
                     {data: 'class_id',},
                     {data: 'course_id',},
-                    {data: 'week_number',},
-                    {data: 'day'},
-                    {data: 'start_time',},
-                    {data: 'end_time',},
-                    {data: 'enabled',},
+                    {data: 'from',},
+                    {data: 'to',},
                     {data: 'created_at',},
                     {data: 'action', orderable: false, searchable: false,},
                 ],

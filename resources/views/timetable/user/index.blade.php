@@ -20,8 +20,8 @@
                     <th>Class Code</th>
                     <th>Course Name</th>
                     <th>Course Year</th>
-                    <th>Week Number</th>
-                    <th>Day</th>
+                    <th>From</th>
+                    <th>To</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -50,8 +50,8 @@
                     {data: 'class_code',},
                     {data: 'course_name',},
                     {data: 'course_year'},
-                    {data: 'week_number',},
-                    {data: 'day',},
+                    {data: 'from',},
+                    {data: 'to',},
                     {data: 'action', orderable: false, searchable: false,},
                 ],
             });
