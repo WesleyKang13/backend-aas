@@ -90,7 +90,7 @@ class TimetableController extends Controller{
                     return date('Y-m-d', strtotime($r->created_at));
                 })
                 ->addColumn('action', function($r){
-                    return '<a href="" class="btn btn-danger">Delete</a>';
+                    return '<a href="/timetable_entry/'.$r->id.'/delete" class="btn btn-danger">Delete</a>';
                 })
                 ->rawColumns(['action', 'day'])
                 ->make('true');
@@ -139,5 +139,19 @@ class TimetableController extends Controller{
         $entry->save();
 
         return redirect('/timetable/'.$timetable->id)->withSuccess('Timetable entry created succesfully');
+    }
+
+    // delete entry
+    public function delete($id){
+        $entry = TimetableEntry::find($id);
+
+        $timetable_id = $entry->timetable_id;
+        if($entry == null){
+            return back()->withError('Invalid. Schedule not found');
+        }
+
+        $entry->delete();
+
+        return redirect('/timetable/'.$timetable_id)->withSuccess('Schedule successfully deleted');
     }
 }

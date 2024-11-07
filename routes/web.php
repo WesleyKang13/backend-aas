@@ -80,5 +80,8 @@ Route::middleware(['userauth'])->group(function(){
     Route::get('/timetable/{id}/addschedule', [App\Http\Controllers\TimetableController::class, 'addschedule']);
     Route::post('/timetable/{id}/addschedule', [App\Http\Controllers\TimetableController::class, 'storeschedule']);
 
+    //entry
+    Route::get('/timetable_entry/{id}/delete', [App\Http\Controllers\TimetableController::class, 'delete']);
+
 });
 
