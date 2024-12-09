@@ -10,7 +10,6 @@
         </div>
 
         <div class="col-6 text-end">
-            <a href="/users/{{$user->id}}/timetable" class="btn btn-primary">Timetable</a>
             @if($user->enabled == 1)
                 <a href="/users/{{$user->id}}/s?status=disabled" class="btn btn-danger">Disable</a>
             @else
@@ -74,26 +73,26 @@
         </table>
 
         <div class="col-6">
-            <h1>Courses</h1>
+            <h1>Timetables</h1>
         </div>
 
-        <div class="col-6 text-end mt-2">
-            <a href="/users/{{$user->id}}/course/create" class="btn btn-primary"><i class="fa fa-plus"></i> Add Course</a>
+        <div class="col-6 text-end">
+            <a href="/users/{{$user->id}}/timetable/create" class="btn btn-primary">Add Timetable</a>
         </div>
 
-        <div class="col-12">
-            <table class="table table-hover table-striped" id="usercourseDT">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Code</th>
-                        <th>Year</th>
-                        <th>Created At</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
+        <table class="table table-hover table-striped" id="usertimetableDT">
+            <thead>
+                <tr>
+                    <th>Timetable Id</th>
+                    <th>Class Code</th>
+                    <th>Course Name</th>
+                    <th>Course Year</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+        </table>
     </div>
 
 </div>
@@ -103,11 +102,11 @@
 @push('scripts')
 <script>
     $(document).ready(function(){
-        $('#usercourseDT').DataTable({
+        $('#usertimetableDT').DataTable({
                 // dom: "<'row'<'col-sm-12 col-md-6'><'col-sm-12 col-md-6'>>" +
                 //     "<'row'<'col-sm-12'tr>>" +
                 //     "<'row'<'col-sm-12 col-md-5'l><'col-sm-12 col-md-7'p>>",
-                //order: [[1, 'asc']],
+                // order: [[1, 'asc']],
                 processing: true,
                 serverSide: true,
                 ajax: '{{Request::fullUrl()}}',
@@ -116,10 +115,12 @@
                     // {className: 'dt-center', targets: [1, 3]},
                 ],
                 columns: [
+                    {data: 'timetable_id',},
+                    {data: 'class_code',},
                     {data: 'course_name',},
-                    {data: 'course_code',},
-                    {data: 'course_year',},
-                    {data: 'created_at',},
+                    {data: 'course_year'},
+                    {data: 'from',},
+                    {data: 'to',},
                     {data: 'action', orderable: false, searchable: false,},
                 ],
             });

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\UserTimetable;
+use App\Models\Timetable;
+use App\Models\Classroom;
 use App\Models\Course;
 use App\Models\UserCourse;
 use Illuminate\Support\Facades\Hash;
@@ -38,26 +41,50 @@ class UserController extends Controller{
     public function show($id){
         $user = User::findOrFail($id);
 
-        if(request()->ajax()){
-            $rows = UserCourse::query()->where('user_id', $user->id);
+        $user_timetables = UserTimetable::query()->where('user_id', $user->id)->get();
 
-            return DataTables::of($rows)
-                ->addColumn('course_name', function($r){
-                    return $r->course->name;
+        $user_timetable = [];
+
+        foreach($user_timetables as $ut){
+            $timetable = Timetable::findOrFail($ut->timetable_id);
+            $class = Classroom::findOrFail($timetable->class_id);
+            $course = Course::findOrFail($timetable->course_id);
+
+            $user_timetable[] = [
+                'timetable_id' => $ut->timetable_id,
+                'class_code' => $class->code,
+                'course_name' => $course->name,
+                'course_year' => $course->year,
+                'from' => date('Y-m-d' , strtotime($timetable->from)),
+                'to' => date('Y-m-d', strtotime($timetable->to)),
+                'action' => '<a href="/users/'.$ut->id.'/timetable/delete" class="btn btn-danger btn-sm">Delete</a>'
+            ];
+        }
+
+        if(request()->ajax()){
+            return DataTables::of($user_timetable)
+                ->editColumn('timetable_id', function($r){
+                    return '<a href=/timetable/'.$r['timetable_id'].'>'.$r['timetable_id'].'</a>';
                 })
-                ->addColumn('course_code', function($r){
-                    return $r->course->code;
+                ->editColumn('class_code', function($r){
+                    return $r['class_code'];
                 })
-                ->addColumn('course_year', function ($r){
-                    return $r->course->year;
+                ->editColumn('course_name', function($r){
+                    return $r['course_name'];
                 })
-                ->editColumn('created_at', function ($r){
-                    return date('Y-M-d H:i:s', strtotime($r->created_at));
+                ->editColumn('course_year', function($r){
+                    return $r['course_year'];
+                })
+                ->editColumn('from', function($r){
+                    return $r['from'];
+                })
+                ->editColumn('to', function($r){
+                    return $r['to'];
                 })
                 ->addColumn('action', function($r){
-                    return '<a href="/usercourse/'.$r->id.'/delete" class="btn btn-danger">Delete</a>';
+                    return $r['action'];
                 })
-                ->rawColumns(['action', 'enabled'])
+                ->rawColumns(['action', 'timetable_id', 'week_number','day'])
                 ->make('true');
 
         }

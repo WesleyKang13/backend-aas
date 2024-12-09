@@ -26,6 +26,14 @@ class UserAuth
         // At this stage we are authenticated - fetch user data
         $user = Auth::user();
 
+        // if($user->role !== 'admin'){
+        //     Auth::logout();
+        //     request()->session()->flush(); // fliush session
+        //     request()->session()->regenerate(); // Regenerate session id
+
+        //     return redirect('/login')->withError('Access Denied!');
+        // }
+
         // Ensure enabled
         if ($user->enabled != 1) {
             // User is disabled - logout and redirect

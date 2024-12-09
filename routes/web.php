@@ -67,7 +67,6 @@ Route::middleware(['userauth'])->group(function(){
     Route::get('/usercourse/{id}/delete',[App\Http\Controllers\UserController::class, 'delete']);
 
     //user timetable
-    Route::get('/users/{id}/timetable',[App\Http\Controllers\UserTimetableController::class, 'index']);
     Route::get('/users/{id}/timetable/create', [App\Http\Controllers\UserTimetableController::class, 'create']);
     Route::post('/users/{id}/timetable/create', [App\Http\Controllers\UserTimetableController::class, 'store']);
     Route::get('/users/{id}/timetable/delete', [App\Http\Controllers\UserTimetableController::class, 'delete']);

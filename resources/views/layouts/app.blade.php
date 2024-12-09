@@ -23,9 +23,11 @@
 
 
     <!-- Top Bar -->
-    @auth
-        @include('partials.topbar')
-    @endauth
+        @auth
+            @if(Auth::user()->role == 'admin')
+                @include('partials.topbar')
+            @endif
+        @endauth
     <!-- /Topbar -->
 
     <!-- Alerts -->

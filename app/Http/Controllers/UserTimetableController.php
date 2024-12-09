@@ -11,67 +11,13 @@ use DataTables;
 
 class UserTimetableController extends Controller
 {
-    public function index($id){
-        $user = User::findOrFail($id);
-
-        $user_timetables = UserTimetable::query()->where('user_id', $user->id)->get();
-
-        $user_timetable = [];
-
-        foreach($user_timetables as $ut){
-            $timetable = Timetable::findOrFail($ut->timetable_id);
-            $class = Classroom::findOrFail($timetable->class_id);
-            $course = Course::findOrFail($timetable->course_id);
-
-            $user_timetable[] = [
-                'timetable_id' => $ut->timetable_id,
-                'class_code' => $class->code,
-                'course_name' => $course->name,
-                'course_year' => $course->year,
-                'from' => date('Y-m-d' , strtotime($timetable->from)),
-                'to' => date('Y-m-d', strtotime($timetable->to)),
-                'action' => '<a href="/users/'.$ut->id.'/timetable/delete" class="btn btn-danger btn-sm">Delete</a>'
-            ];
-        }
-
-        if(request()->ajax()){
-            return DataTables::of($user_timetable)
-                ->editColumn('timetable_id', function($r){
-                    return $r['timetable_id'];
-                })
-                ->editColumn('class_code', function($r){
-                    return $r['class_code'];
-                })
-                ->editColumn('course_name', function($r){
-                    return $r['course_name'];
-                })
-                ->editColumn('course_year', function($r){
-                    return $r['course_year'];
-                })
-                ->editColumn('from', function($r){
-                    return $r['from'];
-                })
-                ->editColumn('to', function($r){
-                    return $r['to'];
-                })
-                ->addColumn('action', function($r){
-                    return $r['action'];
-                })
-                ->rawColumns(['action', 'timetable_id', 'week_number','day'])
-                ->make('true');
-
-        }
-
-        return view('timetable.user.index')->with('user', $user);
-
-    }
 
     public function delete($id){
         $user_timetable = UserTimetable::findOrFail($id);
 
         $user_timetable->delete();
 
-        return redirect('/users/'.$user_timetable->user_id.'/timetable')->withSuccess('Timetable Deleted Successfully');
+        return redirect('/users/'.$user_timetable->user_id)->withSuccess('Timetable Deleted Successfully');
     }
 
     public function create($user_id){
@@ -104,7 +50,7 @@ class UserTimetableController extends Controller
         $user_timetable->user_id = $user->id;
         $user_timetable->save();
 
-        return redirect('/users/'.$user->id.'/timetable')->withSuccess('Timetable Created Successfully');
+        return redirect('/users/'.$user->id)->withSuccess('Timetable Created Successfully');
     }
 
     // public function edit($id){

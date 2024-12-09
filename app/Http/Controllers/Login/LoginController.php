@@ -14,8 +14,9 @@ class LoginController extends Controller
 
     // Index/Login Form
     public function index() {
+
         // Already Auth - Redirect (avoid middleware)
-        if (Auth::check()) {
+        if (Auth::check() and Auth::user()->role == 'admin') {
             return redirect('/')->withSuccess('You are already logged in.');
         }
 
