@@ -14,7 +14,7 @@
             <div class="col-6">
                 <div class="card">
                     <div class="card-header">
-                        Total Students Submitted Attendance Today
+                        Total Students Submitted Attendance Todaya
                     </div>
                     <div class="card-body">
                         <canvas id="studentAttendanceChart"></canvas>
