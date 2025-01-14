@@ -82,5 +82,10 @@ Route::middleware(['userauth'])->group(function(){
     //entry
     Route::get('/timetable_entry/{id}/delete', [App\Http\Controllers\TimetableController::class, 'delete']);
 
+    // notification
+    Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index']);
+    Route::get('/notifications/compose/{user_id}', [App\Http\Controllers\NotificationController::class, 'create']);
+    Route::post('/notifications/compose/{user_id}', [App\Http\Controllers\NotificationController::class, 'store']);
+
 });
 
