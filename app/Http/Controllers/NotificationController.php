@@ -13,9 +13,12 @@ class NotificationController extends Controller{
         $user = Auth::user();
 
         if(request()->ajax()){
-            $rows = Notification::query();
+            $rows = Notification::query()->where('email', $user->email);
 
             return DataTables::of($rows)
+                ->editColumn('user_id', function($r){
+                    return $r->user->email;
+                })
                 ->editColumn('status', function($r){
                     if($r->status == 'read'){
                         return '<span class="badge bg-success">'.ucfirst($r->status).'</span>';
@@ -23,8 +26,11 @@ class NotificationController extends Controller{
                     return '<span class="badge bg-danger">'.ucfirst($r->status).'</span>';
                 })
                 ->addColumn('action', function($r){
-                    return '<a href="#" class="btn btn-primary">View</a>
-                            <a href="#" class="btn btn-danger">Mark As Read</a>';
+                    if($r->status == 'unread'){
+                        return '<a href="#" class="btn btn-primary">View</a>
+                                    <a href="/notifications/status/'.$r->id.'" class="btn btn-danger">Mark As Read</a>';
+                    }
+                    return '<a href="#" class="btn btn-primary">View</a>';
                 })
                 ->rawColumns(['action', 'status'])
                 ->make('true');
@@ -85,5 +91,42 @@ class NotificationController extends Controller{
 
 
         return redirect('/notifications')->withSuccess('Notification Has Been Sent');
+    }
+
+    public function read($id){
+        $notification = Notification::findOrFail($id);
+
+        if($notification->email !== Auth::user()->email){
+            return back()->withError('Access Denied!');
+        }
+
+        if($notification->status == 'read'){
+            return back()->withError('You have already read this email');
+        }
+
+        $notification->status = 'read';
+        $notification->save();
+
+        return redirect('/notifications')->withSuccess('Marked As Read');
+    }
+
+    public function readAll(){
+        $notifications = Notification::query()
+                ->where('status', 'unread')
+                ->where('email', Auth::user()->email)
+                ->get();
+
+        if($notifications->isEmpty()){
+            return back()->withError('No emails are to be read at the moment');
+        }
+
+        foreach($notifications as $n){
+            $notification = Notification::findOrFail($n->id);
+
+            $notification->status = 'read';
+            $notification->save();
+        }
+
+        return redirect('/notifications')->withSuccess('All Emails Are Marked As Read');
     }
 }

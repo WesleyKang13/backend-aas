@@ -13,14 +13,14 @@
         </div>
 
         <div class="col-6 text-end mt-2">
-            <a href="/notication" class="btn btn-secondary">Back</a>
+            <a href="/notifications " class="btn btn-secondary">Back</a>
             {!!FB::submit('Save', [], true)!!}
         </div>
 
         <div class="col-12">
             {!!FB::select('email', 'Email', $email)!!}</br>
             {!!FB::input('subject', 'Subject')!!}</br>
-            {!!FB::input('details', 'Details')!!}</br>
+            {!!FB::textarea('details', 'Details')!!}</br>
             {!!FB::file('file', 'Attach File *(If Needed)*')!!}</br>
         </div>
     </div>

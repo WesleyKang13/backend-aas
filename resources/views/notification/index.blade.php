@@ -12,7 +12,7 @@
 
         <div class="col-6 text-end mt-2">
             <a href="/notifications/compose/{{$user->id}}" class="btn btn-primary">Compose</a>
-            <a href="/" class="btn btn-danger">Mark All As Read</a>
+            <a href="/notifications/readall" class="btn btn-danger">Mark All As Read</a>
         </div>
 
         <div class="col-12">

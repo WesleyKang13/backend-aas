@@ -41,6 +41,7 @@ class HomeController extends Controller{
         foreach($timetables as $t){
             $entries = TimetableEntry::query()
                     ->where('day', lcfirst(date('D')))
+                    ->where('timetable_id', $t->id)
                     ->get();
 
             // check how many students are having this timetable and add it total
