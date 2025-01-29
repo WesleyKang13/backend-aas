@@ -3,8 +3,12 @@
 
 @section('content')
 <div class="container shadow">
-    {!!FB::open('/notifications/compose/'.$user->id, 'POST')!!}
-    {!!FB::setErrors($errors)!!}
+    @if($status == null)
+        {!!FB::open('/notifications/compose/'.$user->id, 'POST')!!}
+    @elseif($status == 'draft')
+        {!!FB::open('/notifications/compose/'.$user->id.'?status=draft', 'POST')!!}
+    @endif
+        {!!FB::setErrors($errors)!!}
 
     @csrf
     <div class="row mt-4">
@@ -18,7 +22,7 @@
         </div>
 
         <div class="col-12">
-            {!!FB::select('email', 'Email', $email)!!}</br>
+            {!!FB::select('receiver', 'Email', $email)!!}</br>
             {!!FB::input('subject', 'Subject')!!}</br>
             {!!FB::textarea('details', 'Details')!!}</br>
             {!!FB::file('file', 'Attach File *(If Needed)*')!!}</br>

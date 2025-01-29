@@ -3,23 +3,33 @@
 
 @section('content')
 <div class="container-fluid">
-    <h1>TO BE DONE (
-        Inbox, Sent, Unread Messages, Read Messages, Draft)</h1>
     <div class="row mt-4 m-auto">
         <div class="col-6">
             <h1>Inbox</h1>
         </div>
 
+        <?php
+            $status = request()->get('status');
+        ?>
+
         <div class="col-6 text-end mt-2">
+            <a href="/notifications/compose/{{$user->id}}?status=draft" class="btn btn-warning">Make Draft</a>
             <a href="/notifications/compose/{{$user->id}}" class="btn btn-primary">Compose</a>
-            <a href="/notifications/readall" class="btn btn-danger">Mark All As Read</a>
+
+            @if($status == 'unread' and $status !== null or $status == null)
+                <a href="/notifications/readall" class="btn btn-danger">Mark All As Read</a>
+            @endif
         </div>
 
         <div class="col-12">
             <table class="table table-hover table-striped" id="notificationDT">
                 <thead>
                     <tr>
-                        <th>Sender</th>
+                        @if(request()->get('status') !== 'sent')
+                            <th>Sender</th>
+                        @else
+                            <th>Receiver</th>
+                        @endif
                         <th>Date & Time</th>
                         <th>Status</th>
                         <th>Subject</th>
@@ -51,7 +61,7 @@
                     // {className: 'dt-center', targets: [1, 3]},
                 ],
                 columns: [
-                    {data: 'user_id',},
+                    {data: 'sender',},
                     {data: 'datetime',},
                     {data: 'status',},
                     {data: 'subject',},

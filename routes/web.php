@@ -85,11 +85,14 @@ Route::middleware(['userauth'])->group(function(){
 
         // notification
         Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index']);
+        Route::get('/notifications/count', [App\Http\Controllers\NotificationController::class, 'count']);
         Route::get('/notifications/compose/{user_id}', [App\Http\Controllers\NotificationController::class, 'create']);
         Route::post('/notifications/compose/{user_id}', [App\Http\Controllers\NotificationController::class, 'store']);
         Route::get('/notifications/status/{id}', [App\Http\Controllers\NotificationController::class, 'read']);
         Route::get('/notifications/readall',  [App\Http\Controllers\NotificationController::class, 'readAll']);
-
+        Route::get('/notifications/{id}', [App\Http\Controllers\NotificationController::class, 'show']);
+        Route::post('/notifications/{id}/reply', [App\Http\Controllers\NotificationController::class, 'reply']);
+        Route::get('/notifications/{id}/send', [App\Http\Controllers\NotificationController::class, 'send']);
     });
 });
 

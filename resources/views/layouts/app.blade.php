@@ -24,7 +24,7 @@
 
     <!-- Top Bar -->
         @auth
-            @if(Auth::user()->role == 'admin')
+            @if(Auth::check())
                 @include('partials.topbar')
             @endif
         @endauth

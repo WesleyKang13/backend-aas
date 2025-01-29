@@ -8,7 +8,10 @@
 </head>
 <body>
     <p>
-        {{$notification->detail}}
+        You have received a new notification from {{$notification->user->firstname. ' '.$notification->user->lastname}}.
+        </br>Please login to your account to view the notification
+
+        <a href="{{url('/notifications')}}" class="btn btn-primary">View Notification</a>
     </p>
 </body>
 </html>
