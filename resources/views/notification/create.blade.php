@@ -4,7 +4,7 @@
 @section('content')
 <div class="container shadow">
     @if($status == null)
-        {!!FB::open('/notifications/compose/'.$user->id, 'POST')!!}
+        {!!FB::open('/notifications/compose/'.$user->id, 'POST', ['enctype' => 'multipart/form-data'])!!}
     @elseif($status == 'draft')
         {!!FB::open('/notifications/compose/'.$user->id.'?status=draft', 'POST')!!}
     @endif
@@ -25,7 +25,7 @@
             {!!FB::select('receiver', 'Email', $email)!!}</br>
             {!!FB::input('subject', 'Subject')!!}</br>
             {!!FB::textarea('details', 'Details')!!}</br>
-            {!!FB::file('file', 'Attach File *(If Needed)*')!!}</br>
+            {!!FB::file('attachment', 'Attachment')!!}</br>
         </div>
     </div>
     {!!FB::close()!!}

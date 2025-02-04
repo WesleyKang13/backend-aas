@@ -30,6 +30,9 @@
                             </h5>
                             <h6 class="card-subtitle mb-2 text-muted">Sent on {{$n->datetime}}</h6>
                             <p class="card-text"><hr>{!!nl2br($n->details)!!}</p>
+                            @if($n->attachment !== null)
+                                <p><b>Attachment:</b> <a href="/notifications/{{$n->id}}/download_attachment"><b>Download</b></a></p>
+                            @endif
                             @if($n->status !== 'read')
                                 <a href="/notifications/status/{{$n->id}}" class="btn btn-danger">Mark As Read</a>
                             @endif
@@ -51,6 +54,10 @@
                     <h5 class="card-title"><b>Subject:</b> {{$notification->subject}}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">Sent on {{$notification->datetime}}</h6>
                     <p class="card-text"><hr>{!!nl2br($notification->details)!!}</p>
+                    @if($notification->attachment !== null)
+                        <p><b>Attachment:</b> <a href="/notifications/{{$notification->id}}/download_attachment"><b>Download</b></a></p>
+                    @endif
+                    <p><b>Attachment:</b> <a href="/notifications/{{$n->id}}/download_attachment"><b>Download</b></a></p>
                     @if($n->receiver == Auth::user()->email)
                         @if($n->status !== 'read')
                                 <a href="/notifications/status/{{$notification->id}}" class="btn btn-danger">Mark As Read</a>

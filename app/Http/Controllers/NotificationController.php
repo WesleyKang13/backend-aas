@@ -43,9 +43,9 @@ class NotificationController extends Controller{
             return DataTables::of($rows)
                 ->editColumn('sender', function($r) use($blur){
                     if($blur == true){
-                        return $r->receiver;
+                        return '<a href="/users/'.$r->user->id.'">'.$r->receiver.'</a>';
                     }
-                    return $r->user->email;
+                    return '<a href="/users/'.$r->user->id.'">'.$r->user->email.'</a>';
                 })
                 ->editColumn('status', function($r) use($blur){
                     if($blur == true){
@@ -71,7 +71,7 @@ class NotificationController extends Controller{
                         return '<a href="/notifications/'.$r->id.'" class="btn btn-primary">View</a>';
                     }
                 })
-                ->rawColumns(['action', 'status'])
+                ->rawColumns(['action', 'status','sender'])
                 ->make('true');
         }
 
@@ -113,7 +113,8 @@ class NotificationController extends Controller{
         $valid = request()->validate([
             'receiver' => 'required|email|exists:users,email',
             'subject' => 'required|string|min:3',
-            'details' => 'required|string|min:10'
+            'details' => 'required|string|min:10',
+            'attachment' => 'nullable|file'
         ]);
 
         // all ok
@@ -141,6 +142,11 @@ class NotificationController extends Controller{
             $notification->status = $status;
         }else{
             $notification->status = 'unread';
+        }
+
+        if(request()->file('attachment') !== null){
+            $path = request()->file('attachment')->store('attachments', 'public');
+            $notification->attachment = $path;
         }
 
         $notification->datetime = date('Y-m-d H:i:s', strtotime(now()));
@@ -298,37 +304,57 @@ class NotificationController extends Controller{
 
     public function count(){
         $user = Auth::user();
-        $unread = Notification::query()
-                ->where('receiver', $user->email)
-                ->where('status', 'unread')
-                ->count();
 
-        $inbox = Notification::query()
-                ->where('receiver', $user->email)
-                ->where('status','!=', 'draft')
-                ->count();
+        $notifications = Notification::query()
+                        ->where('receiver', $user->email)
+                        ->get();
 
-        $read = Notification::query()
-                ->where('receiver', $user->email)
-                ->where('status', 'read')
-                ->count();
+        $data = [
+            'unread' => 0,
+            'inbox' => 0,
+            'read' => 0,
+            'draft' => 0,
+            'sent' => 0
+        ];
 
-        $draft = Notification::query()
-                ->where('receiver', $user->email)
-                ->where('status', 'draft')
-                ->count();
+        $count = 1;
 
-        $sent = Notification::query()
+        foreach($notifications as $n){
+            if($n->status == 'draft'){
+                $data['draft'] += $count;
+            }else if($n->status == 'unread'){
+                $data['unread'] += $count;
+            }else if($n->status == 'read'){
+                $data['read'] += $count;
+            }
+        }
+
+        $data['sent'] = Notification::query()
                 ->where('sender', $user->email)
                 ->where('status', '!=', 'draft')
                 ->count();
 
+        $data['inbox'] = Notification::query()
+                ->where('receiver', $user->email)
+                ->where('status','!=', 'draft')
+                ->count();
+
         return response()->json([
-            'unread' => $unread,
-            'inbox' => $inbox,
-            'read' => $read,
-            'draft' => $draft,
-            'sent' => $sent
+            'unread' => $data['unread'],
+            'inbox' => $data['inbox'],
+            'read' => $data['read'],
+            'draft' => $data['draft'],
+            'sent' => $data['sent']
         ]);
+    }
+
+    public function download($id){
+        $notification = Notification::findOrFail($id);
+
+        if($notification->receiver != Auth::user()->email){
+            return back()->withError('Access Denied!');
+        }
+
+        return response()->download(storage_path('app/public/'.$notification->attachment));
     }
 }

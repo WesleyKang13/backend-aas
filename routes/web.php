@@ -93,6 +93,7 @@ Route::middleware(['userauth'])->group(function(){
         Route::get('/notifications/{id}', [App\Http\Controllers\NotificationController::class, 'show']);
         Route::post('/notifications/{id}/reply', [App\Http\Controllers\NotificationController::class, 'reply']);
         Route::get('/notifications/{id}/send', [App\Http\Controllers\NotificationController::class, 'send']);
+        Route::get('/notifications/{id}/download_attachment', [App\Http\Controllers\NotificationController::class, 'download']);
     });
 });
 
