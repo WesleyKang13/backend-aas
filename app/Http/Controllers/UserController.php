@@ -9,6 +9,7 @@ use App\Models\Classroom;
 use App\Models\Course;
 use App\Models\UserCourse;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use DataTables;
 
 class UserController extends Controller{
@@ -134,6 +135,9 @@ class UserController extends Controller{
             'role' => 'required|in:student,lecturer,admin'
         ]);
 
+        // password for email
+        $p = $valid['password'];
+
         // hash password
         $password = Hash::make($valid['password']);
 
@@ -144,6 +148,16 @@ class UserController extends Controller{
         $user->password = $password;
         $user->role = $valid['role'];
         $user->save();
+
+        $data = [
+            'user' => $user,
+            'password' => $p
+        ];
+
+        Mail::send('user.mail', $data, function($message) use ($user) {
+            $message->to($user->email);
+            $message->subject('Account Created');
+        });
 
         return redirect('/users/'.$user->id)->withSuccess('New '.$user->role.' created successfully');
     }
