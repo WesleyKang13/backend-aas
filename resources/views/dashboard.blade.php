@@ -14,7 +14,7 @@
             <div class="col-6">
                 <div class="card">
                     <div class="card-header">
-                        Total Students Submitted Attendance Today
+                        Total Students Submitted Attendance Today - <b>{{$today_count}}</b>
                     </div>
                     <div class="card-body">
                         <canvas id="studentAttendanceChart"></canvas>
@@ -26,7 +26,7 @@
             <div class="col-6">
                 <div class="card">
                     <div class="card-header">
-                        Total Attendance Needed To Be Submit Today
+                        Total Attendance Needed To Be Submit Today - <b>{{$total_count}}</b>
                     </div>
                     <div class="card-body">
                         <canvas id="totalAttendanceChart"></canvas>

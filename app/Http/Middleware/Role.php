@@ -21,27 +21,27 @@ class Role
         if(!Auth::check()){
 
 
-        $request->session()->flush();
-        // Regenerate session id
-        $request->session()->regenerate();
+            $request->session()->flush();
+            // Regenerate session id
+            $request->session()->regenerate();
             return redirect('/login')->withError('You must login first');
         }
 
         if(Auth::user()->role == null){
 
 
-        $request->session()->flush();
-        // Regenerate session id
-        $request->session()->regenerate();
+            $request->session()->flush();
+            // Regenerate session id
+            $request->session()->regenerate();
             return redirect('login')->withError('Access Denied!');
         }
 
         if(Auth::user()->role !== $role){
 
 
-        $request->session()->flush();
-        // Regenerate session id
-        $request->session()->regenerate();
+            $request->session()->flush();
+            // Regenerate session id
+            $request->session()->regenerate();
             return redirect('/login')->withError('Access Denied!');
         }
 

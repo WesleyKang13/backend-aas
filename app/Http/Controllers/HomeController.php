@@ -13,6 +13,8 @@ class HomeController extends Controller{
         $today = date('Y-m-d');
         // get students attendance
         $students_attendance = [];
+        $today_count = 0;
+        $total_count = 0;
 
         $students  = Attendance::query()->where('date', $today)->get();
 
@@ -29,8 +31,9 @@ class HomeController extends Controller{
         foreach ($students_attendance as $course => $attendance) {
             $student_attendance_chart[] = [
                 'course' => $course,
-                'count' => count($attendance)
+                'count' => count($attendance),
             ];
+            $today_count += count($attendance);
         }
 
         // get total attendance to be submitted today
@@ -41,6 +44,7 @@ class HomeController extends Controller{
         foreach($timetables as $t){
             $entries = TimetableEntry::query()
                     ->where('day', lcfirst(date('D')))
+                    ->where('timetable_id', $t->id)
                     ->get();
 
             // check how many students are having this timetable and add it total
@@ -60,11 +64,14 @@ class HomeController extends Controller{
                 'course' => substr($course_name, 2), //  substr can be removed ( if course wont be having twice on the same day )
                 'count' => $count
             ];
+            $total_count += $count;
         }
 
         return view('dashboard')->with([
             'student_attendance_chart' => $student_attendance_chart,
-            'total_attendance_chart' => $total_attendance_chart
+            'total_attendance_chart' => $total_attendance_chart,
+            'today_count' => $today_count,
+            'total_count' => $total_count
         ]);
     }
 

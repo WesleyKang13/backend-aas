@@ -14,10 +14,12 @@ return new class extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id')->index();
-            $table->string('email')->index();
+            $table->string('sender')->index();
+            $table->string('receiver')->index();
             $table->datetime('datetime')->nullable();
-            $table->string('detail');
-            $table->enum('status', ['read', 'unread']);
+            $table->string('details');
+            $table->string('attachment')->nullable();
+            $table->enum('status', ['read', 'unread', 'draft']);
             $table->string('subject');
             $table->timestamps();
         });
