@@ -10,7 +10,7 @@
     <p>
         Hello {{$user->firstname. ' '.$user->lastname}},</br>
 
-        Please follow the credentials provided to <a href="{{url('/')}}">login</a> to your account:</br>
+        Please follow the credentials provided to <a href="https://wesleytus.com">login</a> to your account:</br>
         Email: {{$user->email}}</br>
         Password: {{$password}}</br>
 
