@@ -96,7 +96,7 @@ Route::middleware(['userauth'])->group(function(){
         Route::get('/notifications/{id}/download_attachment', [App\Http\Controllers\NotificationController::class, 'download']);
 
         // timesheet
-        Route::get('/timesheet', [App\Http\Controllers\TimesheetController::class, 'index']);
+        Route::get('/timesheet', [App\Http\Controllers\TimesheetController::class, 'calendar']);
     });
 });
 
