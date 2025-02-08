@@ -3,7 +3,7 @@
 
 @section('content')
 <div class="container shadow">
-    
+
     {!!FB::open('/classroom/edit/'.$class->id, 'Post')!!}
     {!!FB::setErrors($errors)!!}
     {!!FB::setInput($class)!!}
@@ -40,11 +40,11 @@
                 <td>{{date('Y-M-d H:i', strtotime($class->updated_at))}}</td>
             </tr>
         </table>
-        
+
     </div>
-    
+
     {!!FB::close()!!}
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-6">
             <h1>Courses</h1>
         </div>
@@ -67,7 +67,7 @@
                 </thead>
             </table>
         </div>
-    </div>
+    </div> --}}
 </div>
 @endsection
 
