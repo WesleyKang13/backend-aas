@@ -288,7 +288,7 @@ class NotificationController extends Controller{
         $reply = new Notification();
         $reply->user_id = Auth::user()->id;
         $reply->sender = Auth::user()->email;
-        $reply->receiver = $notification->receiver;
+        $reply->receiver = $notification->sender; 
         $reply->subject = $valid['subject'];
         $reply->details = $valid['details'];
 
