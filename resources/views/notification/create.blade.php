@@ -3,12 +3,8 @@
 
 @section('content')
 <div class="container shadow">
-    @if($status == null)
-        {!!FB::open('/notifications/compose/'.$user->id, 'POST', ['enctype' => 'multipart/form-data'])!!}
-    @elseif($status == 'draft')
-        {!!FB::open('/notifications/compose/'.$user->id.'?status=draft', 'POST')!!}
-    @endif
-        {!!FB::setErrors($errors)!!}
+    {!!FB::open('/notifications/compose/'.$user->id.'/'.$status, 'POST', ['enctype' => 'multipart/form-data'])!!}
+    {!!FB::setErrors($errors)!!}
 
     @csrf
     <div class="row mt-4">

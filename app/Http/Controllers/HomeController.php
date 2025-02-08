@@ -8,15 +8,15 @@ use App\Models\TimetableEntry;
 use App\Models\UserTimetable;
 
 class HomeController extends Controller{
-    public function dashboard(){
+    public function dashboard($month, $day){
 
-        $today = date('Y-m-d');
+        $date = date('Y-'.$month.'-'.$day);
         // get students attendance
         $students_attendance = [];
         $today_count = 0;
         $total_count = 0;
 
-        $students  = Attendance::query()->where('date', $today)->get();
+        $students  = Attendance::query()->where('date', $date)->get();
 
         foreach($students as $s){
             if($s->user->role == 'student'){
@@ -39,17 +39,22 @@ class HomeController extends Controller{
         // get total attendance to be submitted today
         $total_attendance = [];
 
-        $timetables = Timetable::query()->where('from', '<=', $today)->where('to', '>=', $today)->get();
+        $timetables = Timetable::query()->where('from', '<=', $date)->where('to', '>=', $date)->get();
 
         foreach($timetables as $t){
             $entries = TimetableEntry::query()
-                    ->where('day', lcfirst(date('D')))
+                    ->where('day', lcfirst(date('D', strtotime($date))))
                     ->where('timetable_id', $t->id)
                     ->get();
 
             // check how many students are having this timetable and add it total
             foreach($entries as $e){
-                $users_timetable = UserTimetable::query()->where('timetable_id', $e->timetable_id)->count();
+                $users_timetable = UserTimetable::query()
+                        ->join('users', 'users.id', 'users_timetables.user_id')
+                        ->where('users.role', 'student')
+                        ->where('users_timetables.timetable_id', $e->timetable_id)
+                        ->count();
+
                 $timetable = Timetable::findOrFail($e->timetable_id);
 
                 $total_attendance[$timetable->id. ' '.$timetable->course->name] = $users_timetable;

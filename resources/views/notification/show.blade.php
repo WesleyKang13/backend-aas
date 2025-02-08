@@ -9,6 +9,7 @@
             </h1>
         </div>
 
+        {{-- Do proper redirection --}}
         <div class="col-4 text-end mt-2">
             <a href="/notifications" class="btn btn-secondary">Back</a>
         </div>
@@ -28,12 +29,12 @@
                                     <b>Replying To Subject: {{$existing_subject}}</b>
                                 @endif --}}
                             </h5>
-                            <h6 class="card-subtitle mb-2 text-muted">Sent on {{$n->datetime}}</h6>
+                            <h6 class="card-subtitle mb-2 text-muted">{{$n->sender}} - Sent on {{$n->datetime}}</h6>
                             <p class="card-text"><hr>{!!nl2br($n->details)!!}</p>
                             @if($n->attachment !== null)
                                 <p><b>Attachment:</b> <a href="/notifications/{{$n->id}}/download_attachment"><b>Download</b></a></p>
                             @endif
-                            @if($n->status !== 'read')
+                            @if($n->status !== 'read' and $n->receiver == Auth::user()->email)
                                 <a href="/notifications/status/{{$n->id}}" class="btn btn-danger">Mark As Read</a>
                             @endif
                             <a href="/notifications/{{$n->id}}/reply" class="btn btn-primary" id="reply_{{$n->id}}">Reply</a>
@@ -52,14 +53,14 @@
                 <div class="card" style="width: 100%;">
                     <div class="card-body">
                     <h5 class="card-title"><b>Subject:</b> {{$notification->subject}}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Sent on {{$notification->datetime}}</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">{{$notification->sender}} - Sent on {{$notification->datetime}}</h6>
                     <p class="card-text"><hr>{!!nl2br($notification->details)!!}</p>
                     @if($notification->attachment !== null)
                         <p><b>Attachment:</b> <a href="/notifications/{{$notification->id}}/download_attachment"><b>Download</b></a></p>
                     @endif
                     <p><b>Attachment:</b> <a href="/notifications/{{$n->id}}/download_attachment"><b>Download</b></a></p>
-                    @if($n->receiver == Auth::user()->email)
-                        @if($n->status !== 'read')
+                    @if($notification->receiver == Auth::user()->email)
+                        @if($notification->status !== 'read')
                                 <a href="/notifications/status/{{$notification->id}}" class="btn btn-danger">Mark As Read</a>
 
                         @endif
@@ -71,14 +72,14 @@
         </div>
 
         <div class="reply_form">
-            {!!FB::open('/notifications/'.$notification->id.'/reply', 'post')!!}
+            {!!FB::open('/notifications/'.$notification->id.'/reply', 'post', ['enctype' => 'multipart/form-data'])!!}
             {!!FB::setErrors($errors)!!}
             @csrf
 
             <div class="col-12">
                 {!!FB::input('subject', 'Subject')!!}</br>
-                {!!FB::textarea('detail', 'Detail')!!}</br>
-                {!!FB::file('file', 'Attach File *(If Needed)*')!!}</br>
+                {!!FB::textarea('details', 'Details')!!}</br>
+                {!!FB::file('attachment', 'Attach File *(If Needed)*')!!}</br>
             </div>
 
             <div class="col-12 text-end pb-2">

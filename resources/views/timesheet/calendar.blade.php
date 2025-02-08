@@ -63,7 +63,7 @@
                                     @elseif ($currentDay > $daysInMonth)
                                         <td></td>
                                     @else
-                                        <td><a href="" class="text-decoration-none text-dark btn btn-light w-100 ">{{ $currentDay }}</a></td>
+                                        <td><a href="/timesheet/list/{{$current_month}}/{{$currentDay}}" class="text-decoration-none text-dark btn btn-light w-100 ">{{ $currentDay }}</a></td>
 
                                         <?php $currentDay++; ?>
                                     @endif

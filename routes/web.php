@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect('/dashboard');
+    return redirect('/dashboard/'.date('m').'/'.date('d'));
 });
 
 Route::get('/login', [App\Http\Controllers\Login\LoginController::class, 'index']);
@@ -22,7 +22,7 @@ Route::post('/login', [App\Http\Controllers\Login\LoginController::class, 'authe
 
 Route::middleware(['userauth'])->group(function(){
     Route::middleware('role:admin')->group(function(){
-        Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'dashboard']);
+        Route::get('/dashboard/{month}/{day}', [App\Http\Controllers\HomeController::class, 'dashboard']);
         Route::get('/logout', [App\Http\Controllers\Login\LoginController::class, 'logout']);
 
         //classrooms
@@ -86,8 +86,8 @@ Route::middleware(['userauth'])->group(function(){
         // notification
         Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index']);
         Route::get('/notifications/count', [App\Http\Controllers\NotificationController::class, 'count']);
-        Route::get('/notifications/compose/{user_id}', [App\Http\Controllers\NotificationController::class, 'create']);
-        Route::post('/notifications/compose/{user_id}', [App\Http\Controllers\NotificationController::class, 'store']);
+        Route::get('/notifications/compose/{user_id}/{status}', [App\Http\Controllers\NotificationController::class, 'create']);
+        Route::post('/notifications/compose/{user_id}/{status}', [App\Http\Controllers\NotificationController::class, 'store']);
         Route::get('/notifications/status/{id}', [App\Http\Controllers\NotificationController::class, 'read']);
         Route::get('/notifications/readall',  [App\Http\Controllers\NotificationController::class, 'readAll']);
         Route::get('/notifications/{id}', [App\Http\Controllers\NotificationController::class, 'show']);
@@ -97,6 +97,7 @@ Route::middleware(['userauth'])->group(function(){
 
         // timesheet
         Route::get('/timesheet', [App\Http\Controllers\TimesheetController::class, 'calendar']);
+        Route::get('/timesheet/list/{month}/{day}', [App\Http\Controllers\TimesheetController::class, 'list']);
     });
 });
 

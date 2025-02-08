@@ -15,11 +15,13 @@ class NotificationController extends Controller{
         $blur = false;
         $notifications = Notification::query()->where('receiver', $user->email)->orderBy('created_at', 'desc');
 
-        if($status !== null and $status !== 'sent'){
+        if($status == 'read' or $status == 'unread'){
             $notifications = $notifications->where('status', $status);
         }else if($status == 'sent'){
             $blur = true;
             $notifications = Notification::query()->where('sender', $user->email)->where('status', '!=','draft')->orderBy('created_at', 'desc');
+        }else if($status == 'draft'){
+            $notifications = Notification::query()->where('status', 'draft')->where('sender', $user->email)->orderBy('created_at', 'desc');
         }else{
             $notifications = $notifications->where('status', '!=' ,'draft')->where('status', '!=', 'sent');
         }
@@ -27,14 +29,15 @@ class NotificationController extends Controller{
         $notifications = $notifications->get();
         $token = '';
         $rows = [];
-
+        $existed_tokens = [];
 
         // if there are same token then only take the earliest created one and display at table
         foreach($notifications as $n){
-            if($token != $n->token or $token == null){
+            if(!in_array($n->token, $existed_tokens) and $token != $n->token or $token == null){
                 $rows[$n->id] = $n;
             }
 
+            $existed_tokens[$n->token] = $n->token;
             $token = $n->token;
         }
 
@@ -46,6 +49,15 @@ class NotificationController extends Controller{
                         return '<a href="/users/'.$r->user->id.'">'.$r->receiver.'</a>';
                     }
                     return '<a href="/users/'.$r->user->id.'">'.$r->user->email.'</a>';
+                })
+                ->editColumn('subject', function($r){
+                    return '<b>'.$r->subject.'</b>';
+                })
+                ->editColumn('attachment', function($r){
+                    if($r->attachment == null){
+                        return 'No Attachment';
+                    }
+                    return '<a href="/notifications/'.$r->id.'/download_attachment" class="btn btn-warning">Download</a>';
                 })
                 ->editColumn('status', function($r) use($blur){
                     if($blur == true){
@@ -71,7 +83,18 @@ class NotificationController extends Controller{
                         return '<a href="/notifications/'.$r->id.'" class="btn btn-primary">View</a>';
                     }
                 })
-                ->rawColumns(['action', 'status','sender'])
+                ->addColumn('replies', function($r){
+                    $replies = Notification::query()->where('token', $r->token)->count();
+
+                    $replies -= 1;
+
+                    if($replies > 0){
+                        return $replies;
+                    }
+
+                    return 'No Replies';
+                })
+                ->rawColumns(['action', 'status','sender','attachment', 'replies', 'subject'])
                 ->make('true');
         }
 
@@ -81,8 +104,12 @@ class NotificationController extends Controller{
 
     }
 
-    public function create($user_id){
-        $status = request()->get('status');
+    public function create($user_id, $status = null){
+        $valid_status = ['draft', 'new'];
+
+        if($status !== null and !in_array($status, $valid_status)){
+            return back()->withError('Invalid Status');
+        }
 
         $user = User::findOrFail($user_id);
 
@@ -101,12 +128,10 @@ class NotificationController extends Controller{
         ]);
     }
 
-    public function store($user_id){
-        $status = request()->get('status');
+    public function store($user_id, $status = null){
+        $valid_status = ['draft','new'];
 
-        $valid_status = 'draft';
-
-        if($status !== null and $status !== $valid_status){
+        if($status !== null and !in_array($status, $valid_status)){
             return back()->withError('Invalid Status');
         }
 
@@ -138,7 +163,7 @@ class NotificationController extends Controller{
         $notification->subject = $valid['subject'];
         $notification->details = $valid['details'];
 
-        if($status){
+        if($status == 'draft'){
             $notification->status = $status;
         }else{
             $notification->status = 'unread';
@@ -234,12 +259,13 @@ class NotificationController extends Controller{
     public function reply($id){
         $valid = request()->validate([
             'subject' => 'required|string|min:3',
-            'details' => 'required|string|min:10'
+            'details' => 'required|string|min:10',
+            'attachment' => 'nullable|file'
         ]);
 
         $notification = Notification::findOrFail($id);
 
-        if($notification->receiver != Auth::user()->email){
+        if($notification->receiver != Auth::user()->email and $notification->sender != Auth::user()->email){
             return back()->withError('Access Denied!');
         }
 
@@ -254,6 +280,7 @@ class NotificationController extends Controller{
                 $randomString .= $random_numbers[$index];
             }
 
+
             $notification->token = $randomString;
             $notification->save();
         }
@@ -261,9 +288,15 @@ class NotificationController extends Controller{
         $reply = new Notification();
         $reply->user_id = Auth::user()->id;
         $reply->sender = Auth::user()->email;
-        $reply->receiver = $notification->user->email;
+        $reply->receiver = $notification->receiver;
         $reply->subject = $valid['subject'];
         $reply->details = $valid['details'];
+
+        if(request()->file('attachment') !== null){
+            $path = request()->file('attachment')->store('attachments', 'public');
+            $reply->attachment = $path;
+        }
+
         $reply->status = 'unread';
         $reply->token = $notification->token;
         $reply->datetime = $notification->datetime = date('Y-m-d H:i:s', strtotime(now()));
@@ -320,14 +353,17 @@ class NotificationController extends Controller{
         $count = 1;
 
         foreach($notifications as $n){
-            if($n->status == 'draft'){
-                $data['draft'] += $count;
-            }else if($n->status == 'unread'){
+            if($n->status == 'unread'){
                 $data['unread'] += $count;
             }else if($n->status == 'read'){
                 $data['read'] += $count;
             }
         }
+
+        $data['draft'] = Notification::query()
+                ->where('sender', $user->email)
+                ->where('status', '=', 'draft')
+                ->count();
 
         $data['sent'] = Notification::query()
                 ->where('sender', $user->email)
@@ -351,7 +387,7 @@ class NotificationController extends Controller{
     public function download($id){
         $notification = Notification::findOrFail($id);
 
-        if($notification->receiver != Auth::user()->email){
+        if($notification->receiver != Auth::user()->email and $notification->sender != Auth::user()->email){
             return back()->withError('Access Denied!');
         }
 

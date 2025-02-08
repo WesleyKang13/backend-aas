@@ -5,7 +5,9 @@
     <div class="container-fluid">
         <div class="row mt-4">
             <div class="col-12">
-                <h1>Admin Dashboard - {{date('Y/m/d')}}</h1>
+                <h1>
+                    Admin Dashboard - {{date('Y/m/d')}}
+                </h1>
             </div>
         </div>
 
