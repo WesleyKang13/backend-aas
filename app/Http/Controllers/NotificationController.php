@@ -170,7 +170,9 @@ class NotificationController extends Controller{
         }
 
         if(request()->file('attachment') !== null){
-            $path = request()->file('attachment')->store('attachments', 'public');
+            $file = request()->file('attachment');
+            $filename = $file->getClientOriginalName(); // get file ori name
+            $path = $file->storeAs('attachments', $filename, 'public');
             $notification->attachment = $path;
         }
 
@@ -288,12 +290,14 @@ class NotificationController extends Controller{
         $reply = new Notification();
         $reply->user_id = Auth::user()->id;
         $reply->sender = Auth::user()->email;
-        $reply->receiver = $notification->sender; 
+        $reply->receiver = $notification->sender;
         $reply->subject = $valid['subject'];
         $reply->details = $valid['details'];
 
         if(request()->file('attachment') !== null){
-            $path = request()->file('attachment')->store('attachments', 'public');
+            $file = request()->file('attachment');
+            $filename = $file->getClientOriginalName(); // get file ori name
+            $path = $file->storeAs('attachments', $filename, 'public');
             $reply->attachment = $path;
         }
 
@@ -387,10 +391,18 @@ class NotificationController extends Controller{
     public function download($id){
         $notification = Notification::findOrFail($id);
 
-        if($notification->receiver != Auth::user()->email and $notification->sender != Auth::user()->email){
+        if ($notification->receiver != Auth::user()->email && $notification->sender != Auth::user()->email) {
             return back()->withError('Access Denied!');
         }
 
-        return response()->download(storage_path('app/public/'.$notification->attachment));
+        $filePath = storage_path('app/public/' . $notification->attachment);
+
+        if (!file_exists($filePath)) {
+            return back()->withError('File does not exist.');
+        }
+
+        $originalFilename = basename($notification->attachment);
+
+        return response()->download($filePath, $originalFilename);
     }
 }
