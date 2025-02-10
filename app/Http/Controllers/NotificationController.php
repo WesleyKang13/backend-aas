@@ -172,7 +172,7 @@ class NotificationController extends Controller{
         if(request()->file('attachment') !== null){
             $file = request()->file('attachment');
             $filename = $file->getClientOriginalName(); // get file ori name
-            $path = $file->storeAs('attachments', $filename, 'public');
+            $path = $file->storeAs('attachments', $filename);
             $notification->attachment = $path;
         }
 
@@ -297,7 +297,7 @@ class NotificationController extends Controller{
         if(request()->file('attachment') !== null){
             $file = request()->file('attachment');
             $filename = $file->getClientOriginalName(); // get file ori name
-            $path = $file->storeAs('attachments', $filename, 'public');
+            $path = $file->storeAs('attachments', $filename);
             $reply->attachment = $path;
         }
 
@@ -395,7 +395,7 @@ class NotificationController extends Controller{
             return back()->withError('Access Denied!');
         }
 
-        $filePath = storage_path('app/public/' . $notification->attachment);
+        $filePath = storage_path('app/' . $notification->attachment);
 
         if (!file_exists($filePath)) {
             return back()->withError('File does not exist.');
