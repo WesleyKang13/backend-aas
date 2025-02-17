@@ -39,7 +39,7 @@
 
         <br>
 
-        <div class="col-12">
+        {{-- <div class="col-12">
             <div class="card">
                 <div class="card-header">
                     TBA
@@ -51,7 +51,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 @endsection
 

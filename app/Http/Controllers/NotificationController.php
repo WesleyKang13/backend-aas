@@ -180,10 +180,13 @@ class NotificationController extends Controller{
         $notification->token = $randomString;
         $notification->save();
 
+        $receiver = User::query()->where('email', $notification->receiver)->first();
+
         // implement email send here to the receiver
         $data = [
             'user' => $user,
-            'notification' => $notification
+            'notification' => $notification,
+            'receiver' => $receiver
         ];
 
         if($notification->status !== 'draft'){
@@ -326,10 +329,14 @@ class NotificationController extends Controller{
 
         $notification->save();
 
+        $receiver = User::query()->where('email', $notification->receiver)->first();
+
         $data = [
             'user' => $user,
-            'notification' => $notification
+            'notification' => $notification,
+            'receiver' => $receiver
         ];
+
 
         Mail::send('notification.mail', $data, function($message) use ($notification) {
             $message->to($notification->receiver);
