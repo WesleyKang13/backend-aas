@@ -52,10 +52,7 @@ class TimesheetController extends Controller{
                         ->editColumn('users.role', function($r){
                             return $r->role;
                         })
-                        ->addColumn('action', function($r){
-                            return '<a href="#" class="btn btn-primary">View</a>';
-                        })
-                        ->rawColumns(['action','firstname'])
+                        ->rawColumns(['firstname'])
                         ->make('true');
         }
 

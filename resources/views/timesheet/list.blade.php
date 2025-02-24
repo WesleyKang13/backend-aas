@@ -22,7 +22,6 @@
                         <th>Time Submitted</th>
                         <th>IP Address</th>
                         <th>Role</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -53,8 +52,7 @@
                     {data: 'courses.name',},
                     {data: 'timestamp',},
                     {data: 'ip_address',},
-                    {data: 'users.role'},
-                    {data: 'action', orderable: false, searchable: false,},
+                    {data: 'users.role'}
                 ],
             });
     });
