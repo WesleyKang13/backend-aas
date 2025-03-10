@@ -9,6 +9,8 @@
         </div>
 
         <div class="col-6 text-end mt-2">
+            <a href="" class="btn btn-success">Import</a>
+            <a href="" class="btn btn-danger">Export</a>
             <a href="/timetable/create" class="btn btn-primary"><i class="fa fa-plus"></i> Create Timetable</a>
         </div>
 
