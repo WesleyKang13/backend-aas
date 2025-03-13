@@ -29,6 +29,9 @@ Route::middleware(['userauth'])->group(function(){
         Route::get('/classroom', [App\Http\Controllers\ClassroomController::class,'index']);
         Route::get('/classroom/create', [App\Http\Controllers\ClassroomController::class,'create']);
         Route::post('/classroom/create', [App\Http\Controllers\ClassroomController::class,'store']);
+        Route::get('/classroom/import', [App\Http\Controllers\ClassroomController::class,'import']);
+        Route::post('/classroom/import', [App\Http\Controllers\ClassroomController::class,'upload']);
+        Route::get('/classroom/export', [App\Http\Controllers\ClassroomController::class,'export']);
         Route::post('/classroom/edit/{id}', [App\Http\Controllers\ClassroomController::class,'update']);
         Route::get('/classroom/{id}', [App\Http\Controllers\ClassroomController::class,'show']);
 
@@ -44,6 +47,9 @@ Route::middleware(['userauth'])->group(function(){
         Route::get('/course', [App\Http\Controllers\CourseController::class,'index']);
         Route::get('/course/create', [App\Http\Controllers\CourseController::class,'create']);
         Route::post('/course/create', [App\Http\Controllers\CourseController::class,'store']);
+        Route::get('/course/import', [App\Http\Controllers\CourseController::class,'import']);
+        Route::post('/course/import', [App\Http\Controllers\CourseController::class,'upload']);
+        Route::get('/course/export', [App\Http\Controllers\CourseController::class,'export']);
         Route::get('/course/{id}/edit', [App\Http\Controllers\CourseController::class,'edit']);
         Route::post('/course/{id}/edit', [App\Http\Controllers\CourseController::class,'update']);
         Route::get('/course/{id}', [App\Http\Controllers\CourseController::class,'show']);
@@ -59,6 +65,10 @@ Route::middleware(['userauth'])->group(function(){
         Route::get('/users', [App\Http\Controllers\UserController::class, 'index']);
         Route::get('/users/create', [App\Http\Controllers\UserController::class, 'create']);
         Route::post('/users/create', [App\Http\Controllers\UserController::class, 'store']);
+        Route::get('/users/import', [App\Http\Controllers\UserController::class, 'import']);
+        Route::post('/users/import', [App\Http\Controllers\UserController::class, 'upload']);
+        Route::get('/users/export', [App\Http\Controllers\UserController::class, 'export']);
+        Route::get('/users/export', [App\Http\Controllers\UserController::class, 'export']);
         Route::get('/users/edit/{id}', [App\Http\Controllers\UserController::class, 'edit']);
         Route::post('/users/edit/{id}', [App\Http\Controllers\UserController::class, 'update']);
         Route::get('/users/{id}', [App\Http\Controllers\UserController::class, 'show']);
@@ -74,6 +84,9 @@ Route::middleware(['userauth'])->group(function(){
 
         //timetable
         Route::get('/timetable', [App\Http\Controllers\TimetableController::class,'index']);
+        Route::get('/timetable/import', [App\Http\Controllers\TimetableController::class, 'import']);
+        Route::post('/timetable/import', [App\Http\Controllers\TimetableController::class, 'upload']);
+        Route::get('/timetable/export', [App\Http\Controllers\TimetableController::class, 'export']);
         Route::get('/timetable/create', [App\Http\Controllers\TimetableController::class,'create']);
         Route::post('/timetable/create', [App\Http\Controllers\TimetableController::class,'store']);
         Route::get('/timetable/{id}', [App\Http\Controllers\TimetableController::class,'show']);

@@ -22,8 +22,8 @@
         </div>
 
         <div class="col-4 text-end mt-2">
-            <a href="" class="btn btn-success">Import</a>
-            <a href="" class="btn btn-danger">Export</a>
+            <a href="/users/import" class="btn btn-success">Import</a>
+            <a href="/users/export" class="btn btn-danger">Export</a>
             <a href="/users/create" class="btn btn-primary"><i class="fa fa-plus"></i> Create User</a>
         </div>
 

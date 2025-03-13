@@ -12,7 +12,7 @@
         </div>
 
         <div class="col-6 text-end mt-2">
-            <a href="/users/{{$user->id}}/timetable" class="btn btn-secondary">Back</a>
+            <a href="/users/{{$user->id}}" class="btn btn-secondary">Back</a>
             {!!FB::submit('Create', [], true);!!}
         </div>
 

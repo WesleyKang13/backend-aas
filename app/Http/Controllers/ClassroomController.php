@@ -94,4 +94,71 @@ class ClassroomController extends Controller
         return redirect('/classroom/'.$class->id)->withSuccess('Updated Successfully');
     }
 
+    public function import(){
+        return view('classroom.import');
+    }
+
+    public function upload(){
+        $valid = request()->validate([
+            'file' => 'required|file'
+        ]);
+
+        $line = 0;
+        $success = [];
+        $errors = [];
+        $skip = [];
+
+        if (($handle = fopen($valid['file'], "r")) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                if($line == 0){
+                    $csv = ['Class Code'];
+
+                    if($data != $csv){
+                        @$errors[$line] = 'Header does not match';
+                    }
+
+                    @$success[$line] = 'Header is valid';
+                }else{
+                    $code = $data[0];
+
+                    $class = Classroom::query()->where('code', $code)->first();
+
+                    if($class){
+                        @$skip[$line] = 'Classroom already exists';
+                    }else{
+                        $class = new Classroom();
+                        $class->code = $code;
+                        $class->save();
+
+                        @$success[$line] = 'Classroom '.$class->code.' added successfully';
+                    }
+                }
+                $line++;
+            }
+
+            return view('classroom.import')->with([
+                'success' => $success,
+                'fail' => $errors,
+                'skip' => $skip
+            ]);
+        }
+    }
+
+    public function export(){
+        $classes = Classroom::all();
+
+        $csv = "Class Code\n";
+
+        foreach($classes as $c){
+            $csv .= $c->code."\n";
+        }
+
+        return response()->streamDownload(function() use($csv){
+            echo mb_convert_encoding($csv, 'UTF-16LE', 'UTF-8');
+        },
+        'Classrooms.csv',
+        ['Content-Type' => 'text/csv']);
+
+    }
+
 }

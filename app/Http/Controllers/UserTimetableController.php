@@ -50,6 +50,10 @@ class UserTimetableController extends Controller
         $user_timetable->user_id = $user->id;
         $user_timetable->save();
 
+        $course = Course::query()->where('id', $timetable->course_id)->first();
+        $course->total_student += 1;
+        $course->save();
+
         return redirect('/users/'.$user->id)->withSuccess('Timetable Created Successfully');
     }
 

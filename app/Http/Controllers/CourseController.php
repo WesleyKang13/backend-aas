@@ -96,4 +96,87 @@ class CourseController extends Controller
 
         return redirect('/course/'.$course->id)->withSuccess('Course Updated Succesfully');
     }
+
+    public function import(){
+        return view('course.import');
+    }
+
+    public function upload(){
+        $valid = request()->validate([
+            'file' => 'required|file|mimes:csv,txt'
+        ]);
+
+        $line = 0;
+        $success = [];
+        $errors = [];
+        $skip = [];
+
+        if(($handle = fopen($valid['file'], "r")) !== FALSE){
+            while(($data = fgetcsv($handle, 1000, ",")) !== FALSE){
+                if($line == 0){
+                    $csv = ['Course Name', 'Course Code', 'Total Student', 'Year', 'Enabled'];
+
+                    if($data !== $csv){
+                        @$errors[$line] = 'Header does not match';
+                        break;
+                    }
+
+                    @$success[$line] = 'Header is valid';
+                }else{
+
+                    $course_name = $data[0];
+                    $course_code = $data[1];
+                    $total_student = $data[2];
+                    $year = $data[3];
+                    $enabled = $data[4];
+
+                    $course = Course::query()->where('code', $course_code)->first();
+
+                    if($course_name == null or $course_code == null or $total_student == null or $year == null or $enabled == null){
+                        @$errors[$line] = 'Missing data';
+                    }
+
+                    if($course){
+                        @$skip[$line] = 'Course '.$course_code.' already exists';
+                    }else{
+                        // up until here is fine
+                        $course = new Course();
+                        $course->name = $course_name;
+                        $course->code = $course_code;
+                        $course->total_student = $total_student;
+                        $course->year = $year;
+                        $course->enabled = $enabled;
+                        $course->save();
+
+                        @$success[$line] = 'Course '.$course_code.' has been created';
+                    }
+                }
+
+                $line++;
+            }
+
+        }
+
+        return view('course.import')->with([
+            'success' => $success,
+            'fail' => $errors,
+            'skip' => $skip
+        ]);
+    }
+
+    public function export(){
+        $csv = '"Course Name","Course Code","Total Student","Year","Enabled"'."\n";
+
+        $courses = Course::all();
+
+        foreach($courses as $c){
+            $csv .= '"'.$c->name.'","'.$c->code.'","'.$c->total_student.'","'.$c->year.'","'.($c->enabled == 1 ? 'Yes' : 'No').'"'."\n";
+        }
+
+        return response()->streamDownload(function() use($csv){
+            echo mb_convert_encoding($csv, 'UTF-16LE', 'UTF-8');
+        },
+        'Courses.csv',
+        ['Content-Type' => 'text/csv']);
+    }
 }

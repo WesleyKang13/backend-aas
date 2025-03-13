@@ -154,4 +154,183 @@ class TimetableController extends Controller{
 
         return redirect('/timetable/'.$timetable_id)->withSuccess('Schedule successfully deleted');
     }
+
+    public function import(){
+        return view('timetable.import');
+    }
+
+    public function upload(){
+        $valid = request()->validate([
+            'file' => 'required|file|mimes:csv,txt'
+        ]);
+
+        $line = 0;
+        $success = [];
+        $errors = [];
+        $skip = [];
+        $entries = [];
+
+        if(($handle = fopen($valid['file'], "r")) !== FALSE){
+
+            while(($data = fgetcsv($handle, 1000, ",")) !== FALSE){
+                if($line == 0){
+                    $csv = ['ClassCode','CourseName','Name','From','To','Mon','Tue','Wed','Thu','Fri','StartTime','EndTime'];
+                    $data = str_replace(' ', '', $data);
+                    if($data !== $csv){
+                        @$errors[$line] = 'Header does not match. Invalid';
+                        break;
+                    }
+                    @$success[$line] = 'Header is valid';
+                }else{
+                    $class_code = @trim($data[0]);
+                    $course_name = @trim($data[1]);
+                    $name = @trim($data[2]);
+                    $from = $data[3];
+                    $to = $data[4];
+                    $mon = @trim($data[5]);
+                    $tue = @trim($data[6]);
+                    $wed = @trim($data[7]);
+                    $thu = @trim($data[8]);
+                    $fri = @trim($data[9]);
+                    $starttime = @trim($data[10]);
+                    $endtime = @trim($data[11]);
+
+
+                    if($class_code == null){
+                        @$errors[$line] = 'Class code is required';
+                    }else if($course_name == null){
+                        @$errors[$line] = 'Course name is required';
+                    }else if($name == null){
+                        @$errors[$line] = 'Name is required';
+                    }else if($from == null){
+                        @$errors[$line] = 'From date is required';
+                    }else if($to == null){
+                        @$errors[$line] = 'To date is required';
+                    }else if($mon == null){
+                        @$errors[$line] = 'Monday is required';
+                    }else if($tue == null){
+                        @$errors[$line] = 'Tuesday is required';
+                    }else if($wed == null){
+                        @$errors[$line] = 'Wednesday is required';
+                    }else if($thu == null){
+                        @$errors[$line] = 'Thursday is required';
+                    }else if($fri == null){
+                        @$errors[$line] = 'Friday is required';
+                    }else if($starttime == null){
+                        @$errors[$line] = 'Start time is required';
+                    }else if($endtime == null){
+                        @$errors[$line] = 'End time is required';
+                    }
+
+                    $class = Classroom::query()->where('code', $class_code)->first();
+
+                    if($class == null){
+                        @$errors[$line] = 'Class code not found';
+                    }
+
+                    $course = Course::query()->where('name', $course_name)->first();
+
+                    if($course == null){
+                        @$errors[$line] = 'Course name not found';
+                    }
+
+                    if($class !== null and $course !== null){
+                        $timetable = Timetable::query()->where('class_id', $class->id)->where('course_id', $course->id)->where('name', $name)->first();
+
+                        $from_parts = explode("/", $from);
+                        $to_parts = explode("/", $to);
+
+                        $from_date = "{$from_parts[2]}-{$from_parts[1]}-{$from_parts[0]}";
+                        $to_date = "{$to_parts[2]}-{$to_parts[1]}-{$to_parts[0]}";
+
+                        if($timetable !== null){
+                            @$skip[$line] = 'Timetable '. $course->name . ' - ' . $name  .' already exists';
+                        }else{
+                            // up until here then everything is ok
+                            $timetable = new Timetable();
+                            $timetable->class_id = $class->id;
+                            $timetable->course_id = $course->id;
+                            $timetable->name = $name;
+                            $timetable->from = $from_date;
+                            $timetable->to = $to_date;
+                            $timetable->save();
+                            
+                            // check the days
+                            $days = ['mon' => $mon, 'tue' => $tue, 'wed' => $wed, 'thu' => $thu, 'fri' => $fri];
+
+                            foreach($days as $k => $v){
+                                if($v == 'Yes'){
+                                    $entry = new TimetableEntry();
+                                    $entry->timetable_id = $timetable->id;
+                                    $entry->day = $k;
+                                    $entry->starttime = $starttime;
+                                    $entry->endtime = $endtime;
+                                    $entry->save();
+
+                                    @$entries[$line][] = 'Created Entry For ' .$course->name. ' - ' .$name.' on '.$k.' successfully';
+                                }
+                            }
+
+                            @$success[$line] = 'Timetable' .$course->name. ' - ' .$name.' created successfully';
+                        }
+                    }else{
+                        @$errors[$line] = 'Timetable not created due to class or course not found';
+                    }
+
+                }
+
+                $line++;
+
+            }
+
+
+        }
+
+        return view('timetable.import')->with([
+            'success' => $success,
+            'fail' => $errors,
+            'skip' => $skip,
+            'entries' => $entries
+        ]);
+
+    }
+
+    public function export(){
+        $timetables = Timetable::all();
+
+        $csv = '"ClassCode","CourseName","Name","From","To","Mon","Tue","Wed","Thu","Fri","StartTime","EndTime"'."\n";
+
+        foreach($timetables as $t){
+            $days = [];
+            $entries = TimetableEntry::query()->where('timetable_id', $t->id)->get();
+            $class = Classroom::query()->where('id', $t->class_id)->first();
+            $course = Course::query()->where('id', $t->course_id)->first();
+            $starttime = '';
+            $endtime = '';
+
+            foreach($entries as $e){
+                $days[$e->day] = $e->day;
+                $starttime = $e->starttime;
+                $endtime = $e->endtime;
+            }
+
+            $csv .= '"'.$class->code.'","'.$course->name.'","'.$t->name.'","'.$t->from.'","'.$t->to.'"';
+
+            foreach(['mon','tue','wed','thu','fri'] as $day){
+                if(isset($days[$day]) and $day == $days[$day]){
+                    $csv .= ',"Yes"';
+                }else{
+                    $csv .= ',"No"';
+                }
+            }
+
+            $csv .= ',"'.$starttime.'","'.$endtime.'"'."\n";
+        }
+
+        return response()->streamDownload(function() use($csv){
+            echo mb_convert_encoding($csv, 'UTF-16LE', 'UTF-8');
+        },
+        'Timetables.csv',
+        ['Content-Type' => 'text/csv']);
+    }
 }

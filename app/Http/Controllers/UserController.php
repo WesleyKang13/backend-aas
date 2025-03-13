@@ -29,10 +29,17 @@ class UserController extends Controller{
                     ->editColumn('role', function($r){
                         return ucfirst($r->role);
                     })
+                    ->editColumn('enabled', function($r){
+                        if($r->enabled == 1){
+                            return '<span class="badge bg-success">Yes</span>';
+                        }
+
+                        return '<span class="badge bg-danger">No</span>';
+                    })
                     ->addColumn('action', function ($r){
                         return '<a href="/users/'.$r->id.'" class="btn btn-primary btn-small">Manage</a>';
                     })
-                    ->rawColumns(['action'])
+                    ->rawColumns(['action', 'enabled'])
                     ->make('true');
         }
 
@@ -266,4 +273,104 @@ class UserController extends Controller{
         return redirect('/users/'.$user_course->user_id)->withSuccess('Course Deleted Successfully');
     }
 
+    public function import(){
+        return view('user.import');
+    }
+
+    public function upload(){
+        $valid = request()->validate([
+            'file' => 'required|mimes:csv,txt'
+        ]);
+
+        $line = 0;
+        $success = [];
+        $errors = [];
+        $skip = [];
+
+        if(($handle = fopen($valid['file'], "r")) !== FALSE){
+
+            while(($data = fgetcsv($handle, 1000, ",")) !== FALSE){
+                    // get headers
+                    if($line == 0){
+                        $csv = ["Email","Firstname","Lastname","Password","Role"];
+
+                        $data = str_replace(' ', '', $data);
+
+                        if($data !== $csv){
+                            @$errors[$line] = 'Header does not match. Invalid';
+                            break;
+                        }
+                        @$success[$line] = 'Header is valid';
+
+                    }else{
+                        // initialize data
+                        $email = @trim($data[0]);
+                        $firstname = @trim($data[1]);
+                        $lastname = @trim($data[2]);
+                        $password = @trim($data[3]);
+                        $role = @trim($data[4]);
+
+                        if($email == null){
+                            @$errors[$line] = "Email is empty";
+                        }elseif($firstname == null){
+                            @$errors[$line] = "Firstname is empty";
+                        }elseif($lastname == null){
+                            @$errors[$line] = "Lastname is empty";
+                        }elseif($password == null){
+                            @$errors[$line] = "Password is empty";
+                        }elseif($role == null){
+                            @$errors[$line] = "Role is empty";
+                        }else{
+                            // get all existing emails that are enabled
+                            $users = User::query()->where('enabled', 1)->get();
+                            $existing_users = [];
+
+                            foreach($users as $u){
+                                $existing_users[] = $u->email;
+                            }
+
+                            if(!in_array($email, $existing_users)){
+                                $user = new User();
+                                $user->email = $email;
+                                $user->firstname = $firstname;
+                                $user->lastname = $lastname;
+                                $user->password = Hash::make($password);
+                                $user->role = $role;
+                                $user->save();
+
+                                @$success[$line] = 'User '.$email.' created successfully';
+                            }else{
+                                @$skip[$line] = 'User '.$email.' already exists';
+                            }
+                        }
+
+                    }
+                $line++;
+            }
+
+        }
+
+        return view('user.import')->with([
+            'success' => $success,
+            'fail' => $errors,
+            'skip' => $skip
+        ]);
+    }
+
+    public function export(){
+        $csv = '"Email","Firstname","Lastname","Password","Role"'."\n";
+
+        $users = User::query()->where('enabled', 1)->get();
+
+        foreach($users as $u){
+            $csv .= '"'.$u->email.'","'.$u->firstname.'","'.$u->lastname.'","N/A","'.$u->role.'"'."\n";
+        }
+
+        return response()->streamDownload(function() use($csv){
+            echo mb_convert_encoding($csv, 'UTF-16LE', 'UTF-8');
+        },
+        'Users.csv',
+        ['Content-Type' => 'text/csv']);
+
+    }
 }

@@ -76,7 +76,7 @@ class LoginController extends Controller
 
             // Failed
             // TODO FAILCOUNT
-            return back()->withInput()->withError('Authentication Failed.');
+            return redirect('/login')->withInput()->withError('Authentication Failed.');
         }
     }
 
