@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 class Timetable extends Model
 {
     use HasFactory;
+    public function entries(){
+        return $this->hasMany(TimetableEntry::class);
+    }
 
     public function course(){
         return $this->belongsTo(Course::class);

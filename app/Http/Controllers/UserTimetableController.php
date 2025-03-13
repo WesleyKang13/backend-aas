@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserTimetable;
+use App\Models\TimetableEntry;
 use App\Models\User;
 use App\Models\Classroom;
 use App\Models\Course;
@@ -44,6 +45,43 @@ class UserTimetableController extends Controller
         $timetable = Timetable::findOrFail($valid['timetable_id']);
 
         $user = User::findOrFail($user_id);
+
+        $alreadyAssigned = UserTimetable::where('timetable_id', $timetable->id)
+            ->where('user_id', $user->id)
+            ->exists();
+
+        if ($alreadyAssigned) {
+            return redirect('/users/' . $user->id)->withError('This is already assigned');
+        }
+
+        // check if assigned timetable is having the same course on the same day
+        $timetables = Timetable::where('course_id', $timetable->course_id)
+                    ->with('entries')
+                    ->get();
+
+        $days = [];
+        foreach ($timetables as $t) {
+            $days[$t->id] = $t->entries->pluck('day')->toArray();
+        }
+
+        $requestedEntries = TimetableEntry::where('timetable_id', $valid['timetable_id'])
+                ->pluck('day')
+                ->toArray();
+
+        foreach ($timetables as $t) {
+            // check if exists
+            $exists = UserTimetable::where('timetable_id', $t->id)->where('user_id', $user->id)->exists();
+
+            if ($exists) {
+                foreach ($requestedEntries as $day) {
+                    if (!empty($days[$t->id]) and in_array($day, $days[$t->id])) {
+                        return redirect('/users/' . $user->id)->withError(
+                            'You cannot be assigned to a timetable with the same course on the same day - ' . ucfirst($day)
+                        );
+                    }
+                }
+            }
+        }
 
         $user_timetable = new UserTimetable();
         $user_timetable->timetable_id = $timetable->id;
