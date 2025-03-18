@@ -138,9 +138,18 @@ class UserController extends Controller{
             'firstname' => 'required|string',
             'lastname' => 'required|string',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
+            'password' => 'nullable|min:6',
             'role' => 'required|in:student,lecturer,admin'
         ]);
+
+        if($valid['password'] == null){
+            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $charactersLength = strlen($characters);
+
+            for ($i = 0; $i < 12; $i++) {
+                $valid['password'] .= $characters[random_int(0, $charactersLength - 1)];
+            }
+        }
 
         // password for email
         $p = $valid['password'];
@@ -316,8 +325,6 @@ class UserController extends Controller{
                             @$errors[$line] = "Firstname is empty";
                         }elseif($lastname == null){
                             @$errors[$line] = "Lastname is empty";
-                        }elseif($password == null){
-                            @$errors[$line] = "Password is empty";
                         }elseif($role == null){
                             @$errors[$line] = "Role is empty";
                         }else{
@@ -334,11 +341,32 @@ class UserController extends Controller{
                                 $user->email = $email;
                                 $user->firstname = $firstname;
                                 $user->lastname = $lastname;
+
+                                if($password == null){
+                                    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                                    $charactersLength = strlen($characters);
+                                    $password = '';
+
+                                    for ($i = 0; $i < 12; $i++) {
+                                        $password .= $characters[random_int(0, $charactersLength - 1)];
+                                    }
+                                }
+
                                 $user->password = Hash::make($password);
                                 $user->role = $role;
                                 $user->save();
 
                                 @$success[$line] = 'User '.$email.' created successfully';
+
+                                $data = [
+                                    'user' => $user,
+                                    'password' => $password
+                                ];
+
+                                Mail::send('user.mail', $data, function($message) use ($user) {
+                                    $message->to($user->email);
+                                    $message->subject('Account Created');
+                                });
                             }else{
                                 @$skip[$line] = 'User '.$email.' already exists';
                             }

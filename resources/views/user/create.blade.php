@@ -20,7 +20,7 @@
             {!!FB::input('firstname', 'Firstname')!!}<br>
             {!!FB::input('lastname', 'Lastname')!!}<br>
             {!!FB::input('email', 'Email')!!}<br>
-            {!!FB::password('password', 'Password')!!}<br>
+            {!!FB::password('password', 'Password', ['Placeholder' => 'Auto Generate Password if left empty'])!!}<br>
             {!!FB::select('role', 'Role', $roles)!!}<br>
         </div>
 

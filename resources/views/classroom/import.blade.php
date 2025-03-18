@@ -14,7 +14,7 @@
         </div>
 
         <div class="col-6 text-end mt-2">
-            <a href="/classrooms" class="btn btn-secondary">Back</a>
+            <a href="/classroom" class="btn btn-secondary">Back</a>
             {!!FB::submit('Save', [], true)!!}
         </div>
 

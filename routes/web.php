@@ -27,10 +27,10 @@ Route::middleware(['userauth'])->group(function(){
 
         //classrooms
         Route::get('/classroom', [App\Http\Controllers\ClassroomController::class,'index']);
-        Route::get('/classroom/create', [App\Http\Controllers\ClassroomController::class,'create']);
-        Route::post('/classroom/create', [App\Http\Controllers\ClassroomController::class,'store']);
         Route::get('/classroom/import', [App\Http\Controllers\ClassroomController::class,'import']);
         Route::post('/classroom/import', [App\Http\Controllers\ClassroomController::class,'upload']);
+        Route::get('/classroom/create', [App\Http\Controllers\ClassroomController::class,'create']);
+        Route::post('/classroom/create', [App\Http\Controllers\ClassroomController::class,'store']);
         Route::get('/classroom/export', [App\Http\Controllers\ClassroomController::class,'export']);
         Route::post('/classroom/edit/{id}', [App\Http\Controllers\ClassroomController::class,'update']);
         Route::get('/classroom/{id}', [App\Http\Controllers\ClassroomController::class,'show']);
