@@ -92,9 +92,10 @@ Route::middleware(['userauth'])->group(function(){
         Route::get('/timetable/{id}', [App\Http\Controllers\TimetableController::class,'show']);
         Route::get('/timetable/{id}/addschedule', [App\Http\Controllers\TimetableController::class, 'addschedule']);
         Route::post('/timetable/{id}/addschedule', [App\Http\Controllers\TimetableController::class, 'storeschedule']);
+        Route::get('/timetable/{id}/delete', [App\Http\Controllers\TimetableController::class, 'delete']);
 
         //entry
-        Route::get('/timetable_entry/{id}/delete', [App\Http\Controllers\TimetableController::class, 'delete']);
+        Route::get('/timetable_entry/{id}/delete', [App\Http\Controllers\TimetableController::class, 'deleteEntry']);
 
         // notification
         Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index']);

@@ -25,7 +25,8 @@ class TimetableController extends Controller{
                     return date('Y-M-d', strtotime($rows->created_at));
                 })
                 ->addColumn('action', function($rows){
-                    return '<a href="/timetable/'.$rows->id.'" class="btn btn-primary">Manage</a>';
+                    return '<a href="/timetable/'.$rows->id.'" class="btn btn-primary">Manage</a>
+                    <a href="/timetable/'.$rows->id.'/delete" class="btn btn-danger">Delete</a>';
                 })
                 ->rawColumns(['action','created_at', 'enabled'])
                 ->make('true');
@@ -151,7 +152,7 @@ class TimetableController extends Controller{
     }
 
     // delete entry
-    public function delete($id){
+    public function deleteEntry($id){
         $entry = TimetableEntry::find($id);
 
         $timetable_id = $entry->timetable_id;
@@ -341,5 +342,17 @@ class TimetableController extends Controller{
         },
         'Timetables.csv',
         ['Content-Type' => 'text/csv']);
+    }
+
+    public function delete($id){
+        $timetable = Timetable::find($id);
+
+        if($timetable == null){
+            return back()->withError('Timetable not found');
+        }
+
+        $timetable->delete();
+
+        return redirect('/timetable')->withSuccess('Timetable deleted successfully');
     }
 }
