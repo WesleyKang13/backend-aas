@@ -130,6 +130,15 @@ class TimetableController extends Controller{
 
         $timetable = Timetable::findOrFail($id);
 
+        // check existence of entries
+        $entries = TimetableEntry::query()->where('timetable_id', $timetable->id)->get();
+
+        foreach($entries as $e){
+            if($e->day == $valid['day'] and $e->starttime == $valid['starttime'] and $e->endtime == $valid['endtime']){
+                return back()->withError('Same Schedule already exists for this day');
+            }
+        }
+
         $entry = new TimetableEntry();
         $entry->timetable_id = $timetable->id;
         foreach($valid as $k => $v){
@@ -254,7 +263,7 @@ class TimetableController extends Controller{
                             $timetable->from = $from_date;
                             $timetable->to = $to_date;
                             $timetable->save();
-                            
+
                             // check the days
                             $days = ['mon' => $mon, 'tue' => $tue, 'wed' => $wed, 'thu' => $thu, 'fri' => $fri];
 

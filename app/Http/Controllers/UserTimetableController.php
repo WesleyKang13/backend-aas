@@ -76,7 +76,7 @@ class UserTimetableController extends Controller
                 foreach ($requestedEntries as $day) {
                     if (!empty($days[$t->id]) and in_array($day, $days[$t->id])) {
                         return redirect('/users/' . $user->id)->withError(
-                            'You cannot assigned a timetable with the same course on the same day - ' . ucfirst($day)
+                            'You cannot ahssigned a timetable with the same course on the same day - ' . ucfirst($day)
                         );
                     }
                 }
