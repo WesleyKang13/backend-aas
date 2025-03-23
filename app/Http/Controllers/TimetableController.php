@@ -6,6 +6,7 @@ use App\Models\Classroom;
 use App\Models\Course;
 use App\Models\Timetable;
 use App\Models\TimetableEntry;
+use App\Models\UserTimetable;
 use DateTime;
 use DataTables;
 class TimetableController extends Controller{
@@ -350,6 +351,12 @@ class TimetableController extends Controller{
         if($timetable == null){
             return back()->withError('Timetable not found');
         }
+
+        // get all entries of this timetable
+        $entries = TimetableEntry::query()->where('timetable_id', $timetable->id)->delete();
+
+        // get all users with this timetable and delete
+        $user_timetables = UserTimetable::query()->where('timetable_id', $timetable->id)->delete();
 
         $timetable->delete();
 

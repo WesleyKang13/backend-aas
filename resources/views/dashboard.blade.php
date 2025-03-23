@@ -58,6 +58,7 @@
 @push('scripts')
 <script>
     // Student Attendance Data
+    @if(isset($student_attendance_chart) and isset($total_attendance_chart))
     const studentAttendanceData = {
         labels: @json(array_column($student_attendance_chart, 'course')),
         datasets: [{
@@ -108,5 +109,6 @@
             }
         }
     });
+    @endif
 </script>
 @endpush

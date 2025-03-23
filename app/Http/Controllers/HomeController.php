@@ -25,7 +25,7 @@ class HomeController extends Controller{
                 ];
             }
         }
-
+        
         // Prepare student attendance data for chart
         $student_attendance_chart = [];
         foreach ($students_attendance as $course => $attendance) {
