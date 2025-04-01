@@ -48,7 +48,6 @@ class CourseController extends Controller
         $valid = request()->validate([
             'name' => 'required|string',
             'code' => 'required|string|min:3',
-            'total_student' => 'required|numeric',
             'year' => 'required'
         ]);
 
@@ -58,6 +57,7 @@ class CourseController extends Controller
             $course->{$k} = $v;
         }
 
+        $course->total_student = 0;
         $course->save();
 
         return redirect('/course/'.$course->id)->withSuccess('Course Created Successfully');
