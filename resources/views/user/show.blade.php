@@ -13,7 +13,7 @@
             @if($user->enabled == 1)
                 <a href="/users/{{$user->id}}/s?status=disabled" class="btn btn-danger">Disable</a>
             @else
-                <a href="/users/{{$user->id}}/s?status=enabled" class="btn btn-success">Enabled</a>
+                <a href="/users/{{$user->id}}/s?status=enabled" class="btn btn-success">Enable</a>
             @endif
 
             <a href="/users" class="btn btn-secondary">Back</a>
