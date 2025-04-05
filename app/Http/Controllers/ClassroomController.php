@@ -100,7 +100,7 @@ class ClassroomController extends Controller
 
     public function upload(){
         $valid = request()->validate([
-            'file' => 'required|file'
+            'file' => 'required|file|mimetypes:text/csv,text/plain,application/csv,application/vnd.ms-excel,application/octet-stream'
         ]);
 
         $line = 0;
@@ -112,6 +112,8 @@ class ClassroomController extends Controller
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                 if($line == 0){
                     $csv = ['Class Code'];
+                    $data = mb_convert_encoding($data, 'UTF-8','UTF-16');
+                    $data = str_replace(['"','?'], '',$data);
 
                     if($data != $csv){
                         @$errors[$line] = 'Header does not match';
@@ -155,7 +157,7 @@ class ClassroomController extends Controller
         }
 
         return response()->streamDownload(function() use($csv){
-            echo mb_convert_encoding($csv, 'UTF-16LE', 'UTF-8');
+            echo mb_convert_encoding($csv, 'UTF-16', 'UTF-8');
         },
         'Classrooms.csv',
         ['Content-Type' => 'text/csv']);

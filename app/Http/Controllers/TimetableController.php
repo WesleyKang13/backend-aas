@@ -172,7 +172,7 @@ class TimetableController extends Controller{
 
     public function upload(){
         $valid = request()->validate([
-            'file' => 'required|file|mimes:csv,txt'
+            'file' => 'required|file|mimetypes:text/csv,text/plain,application/csv,application/vnd.ms-excel,application/octet-stream'
         ]);
 
         $line = 0;
@@ -186,18 +186,24 @@ class TimetableController extends Controller{
             while(($data = fgetcsv($handle, 1000, ",")) !== FALSE){
                 if($line == 0){
                     $csv = ['ClassCode','CourseName','Name','From','To','Mon','Tue','Wed','Thu','Fri','StartTime','EndTime'];
-                    $data = str_replace(' ', '', $data);
+
+                    $data = mb_convert_encoding($data, 'UTF-8','UTF-16');
+                    $data = str_replace(['"','?'], '',$data);
+
                     if($data !== $csv){
                         @$errors[$line] = 'Header does not match. Invalid';
                         break;
                     }
                     @$success[$line] = 'Header is valid';
                 }else{
+                    $data = mb_convert_encoding($data, 'UTF-8','UTF-16');
+                    $data = str_replace(['"','?'], '',$data);
+
                     $class_code = @trim($data[0]);
                     $course_name = @trim($data[1]);
                     $name = @trim($data[2]);
-                    $from = $data[3];
-                    $to = $data[4];
+                    $from = @trim($data[3]);
+                    $to = @trim($data[4]);
                     $mon = @trim($data[5]);
                     $tue = @trim($data[6]);
                     $wed = @trim($data[7]);
@@ -248,8 +254,8 @@ class TimetableController extends Controller{
                     if($class !== null and $course !== null){
                         $timetable = Timetable::query()->where('class_id', $class->id)->where('course_id', $course->id)->where('name', $name)->first();
 
-                        $from_parts = explode("/", $from);
-                        $to_parts = explode("/", $to);
+                        $from_parts = explode("-", $from);
+                        $to_parts = explode("-", $to);
 
                         $from_date = "{$from_parts[2]}-{$from_parts[1]}-{$from_parts[0]}";
                         $to_date = "{$to_parts[2]}-{$to_parts[1]}-{$to_parts[0]}";
@@ -339,7 +345,7 @@ class TimetableController extends Controller{
         }
 
         return response()->streamDownload(function() use($csv){
-            echo mb_convert_encoding($csv, 'UTF-16LE', 'UTF-8');
+            echo mb_convert_encoding($csv, 'UTF-16', 'UTF-8');
         },
         'Timetables.csv',
         ['Content-Type' => 'text/csv']);

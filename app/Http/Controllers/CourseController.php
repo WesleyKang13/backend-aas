@@ -102,8 +102,9 @@ class CourseController extends Controller
     }
 
     public function upload(){
+
         $valid = request()->validate([
-            'file' => 'required|file|mimes:csv,txt'
+            'file' => 'required|file|mimetypes:text/csv,text/plain,application/csv,application/vnd.ms-excel,application/octet-stream'
         ]);
 
         $line = 0;
@@ -116,6 +117,9 @@ class CourseController extends Controller
                 if($line == 0){
                     $csv = ['Course Name', 'Course Code', 'Total Student', 'Year', 'Enabled'];
 
+                    $data = mb_convert_encoding($data, 'UTF-8','UTF-16');
+                    $data = str_replace(['"','?'], '',$data);
+
                     if($data !== $csv){
                         @$errors[$line] = 'Header does not match';
                         break;
@@ -124,12 +128,15 @@ class CourseController extends Controller
                     @$success[$line] = 'Header is valid';
                 }else{
 
+                    $data = mb_convert_encoding($data, 'UTF-8','UTF-16');
+                    $data = str_replace(['"','?'], '',$data);
+
                     $course_name = $data[0];
                     $course_code = $data[1];
                     $total_student = $data[2];
                     $year = $data[3];
                     $enabled = $data[4];
-
+                    
                     $course = Course::query()->where('code', $course_code)->first();
 
                     if($course_name == null or $course_code == null or $total_student == null or $year == null or $enabled == null){
@@ -174,7 +181,7 @@ class CourseController extends Controller
         }
 
         return response()->streamDownload(function() use($csv){
-            echo mb_convert_encoding($csv, 'UTF-16LE', 'UTF-8');
+            echo mb_convert_encoding($csv, 'UTF-16', 'UTF-8');
         },
         'Courses.csv',
         ['Content-Type' => 'text/csv']);

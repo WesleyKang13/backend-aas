@@ -288,7 +288,7 @@ class UserController extends Controller{
 
     public function upload(){
         $valid = request()->validate([
-            'file' => 'required|mimes:csv,txt'
+            'file' => 'required|file|mimetypes:text/csv,text/plain,application/csv,application/vnd.ms-excel,application/octet-stream'
         ]);
 
         $line = 0;
@@ -302,8 +302,8 @@ class UserController extends Controller{
                     // get headers
                     if($line == 0){
                         $csv = ["Email","Firstname","Lastname","Password","Role"];
-
-                        $data = str_replace(' ', '', $data);
+                        $data = mb_convert_encoding($data, 'UTF-8','UTF-16');
+                        $data = str_replace(['"','?'], '',$data);
 
                         if($data !== $csv){
                             @$errors[$line] = 'Header does not match. Invalid';
@@ -312,6 +312,8 @@ class UserController extends Controller{
                         @$success[$line] = 'Header is valid';
 
                     }else{
+                        $data = mb_convert_encoding($data, 'UTF-8','UTF-16');
+                        $data = str_replace(['"','?'], '',$data);
                         // initialize data
                         $email = @trim($data[0]);
                         $firstname = @trim($data[1]);
@@ -395,7 +397,7 @@ class UserController extends Controller{
         }
 
         return response()->streamDownload(function() use($csv){
-            echo mb_convert_encoding($csv, 'UTF-16LE', 'UTF-8');
+            echo mb_convert_encoding($csv, 'UTF-16', 'UTF-8');
         },
         'Users.csv',
         ['Content-Type' => 'text/csv']);
